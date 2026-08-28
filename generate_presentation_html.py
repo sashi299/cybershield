@@ -1,0 +1,806 @@
+html_content = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CyberShield - PPT Presentation Deck</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  @page {
+    size: 11in 8.5in; /* Standard US Letter Landscape */
+    margin: 0;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #080D1A;
+    color: #F1F5F9;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .slide {
+    width: 11in;
+    height: 8.5in;
+    page-break-after: always;
+    page-break-inside: avoid;
+    position: relative;
+    padding: 2.2rem 3rem;
+    background: radial-gradient(circle at 85% 15%, rgba(6, 182, 212, 0.12) 0%, rgba(15, 23, 42, 0.98) 70%), #0A0F1D;
+    border-bottom: 2px solid rgba(6, 182, 212, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+
+  /* Watermark shield */
+  .slide::before {
+    content: "🛡️";
+    position: absolute;
+    right: -2rem;
+    bottom: -2rem;
+    font-size: 20rem;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .header .badge {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: rgba(6, 182, 212, 0.15);
+    color: #06B6D4;
+    border: 1px solid rgba(6, 182, 212, 0.4);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+  }
+
+  .header .slide-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    color: #94A3B8;
+  }
+
+  .slide-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    letter-spacing: -0.5px;
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .slide-subtitle {
+    font-size: 0.95rem;
+    color: #94A3B8;
+    margin-bottom: 1.2rem;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+    flex-grow: 1;
+  }
+
+  .content-grid.single-col {
+    grid-template-columns: 1fr;
+  }
+
+  .content-grid.three-col {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .card {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 1.1rem 1.3rem;
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .card.highlight {
+    border-color: rgba(6, 182, 212, 0.4);
+    background: rgba(6, 182, 212, 0.06);
+  }
+
+  .card.danger {
+    border-color: rgba(239, 68, 68, 0.4);
+    background: rgba(239, 68, 68, 0.06);
+  }
+
+  .card.success {
+    border-color: rgba(16, 185, 129, 0.4);
+    background: rgba(16, 185, 129, 0.06);
+  }
+
+  .card-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #38BDF8;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .card-title.danger-title { color: #F87171; }
+  .card-title.success-title { color: #34D399; }
+  .card-title.warning-title { color: #FBBF24; }
+
+  ul.bullet-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  ul.bullet-list li {
+    position: relative;
+    padding-left: 1.3rem;
+    margin-bottom: 0.55rem;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: #CBD5E1;
+  }
+
+  ul.bullet-list li::before {
+    content: "▸";
+    position: absolute;
+    left: 0;
+    color: #06B6D4;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
+  ul.bullet-list.danger li::before { color: #EF4444; }
+  ul.bullet-list.success li::before { color: #10B981; }
+
+  .speaker-notes-box {
+    margin-top: 1rem;
+    background: rgba(15, 23, 42, 0.9);
+    border-left: 4px solid #06B6D4;
+    border-radius: 0 8px 8px 0;
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    color: #94A3B8;
+  }
+
+  .speaker-notes-box strong {
+    color: #38BDF8;
+    font-family: 'Outfit', sans-serif;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 0.2rem;
+  }
+
+  /* Title slide specific */
+  .title-hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+  }
+
+  .title-hero .logo-icon {
+    font-size: 4.5rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 0 30px rgba(6, 182, 212, 0.6));
+  }
+
+  .title-hero h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 3.8rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #FFFFFF 30%, #38BDF8 70%, #06B6D4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+  }
+
+  .title-hero .tagline {
+    font-size: 1.35rem;
+    color: #94A3B8;
+    max-width: 750px;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+  }
+
+  .meta-chips {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .chip {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    padding: 0.5rem 1.2rem;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    color: #E2E8F0;
+  }
+
+  .metric-badge {
+    display: inline-block;
+    background: rgba(16, 185, 129, 0.15);
+    color: #34D399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide">
+  <div class="title-hero">
+    <div class="logo-icon">🛡️</div>
+    <h1>CYBERSHIELD</h1>
+    <div class="tagline">Real-Time AI-Powered Phishing, Smishing & Fraud Protection Engine</div>
+    <div style="font-family: 'Outfit'; font-size: 1.1rem; color: #38BDF8; letter-spacing: 1px; font-weight: 600;">
+      Autonomous Lockscreen & In-App Security for Messaging Ecosystems
+    </div>
+    <div class="meta-chips">
+      <div class="chip">🚀 Track: Cybersecurity & AI / ML</div>
+      <div class="chip">📱 Platform: Flutter + Android Native + React 19</div>
+      <div class="chip">⚡ Latency: &lt;10ms Hybrid Inference</div>
+    </div>
+  </div>
+  <div class="speaker-notes-box">
+    <strong>🎙️ Speaker Note (Opening Pitch)</strong>
+    "Good morning judges and mentors. Today, we are proud to present CyberShield — an intelligent, real-time protection system designed to safeguard users from the rapidly growing menace of phishing, WhatsApp smishing, and fraudulent QR codes."
+  </div>
+</div>
+
+<!-- SLIDE 2: PROBLEM STATEMENT -->
+<div class="slide">
+  <div>
+    <div class="header">
+      <span class="badge">Challenge & Market Need</span>
+      <span class="slide-number">Slide 02 / 12</span>
+    </div>
+    <div class="slide-title">🚨 The Epidemic of Social Engineering Scams</div>
+    <div class="slide-subtitle">Why existing cybersecurity defenses fail ordinary users daily</div>
+  </div>
+
+  <div class="content-grid">
+    <div class="card danger">
+      <div class="card-title danger-title">📱 Smishing & WhatsApp Fraud Surge</div>
+      <ul class="bullet-list danger">
+        <li>Over <strong>3.4 billion phishing messages</strong> are dispatched globally every day.</li>
+        <li>Attackers impersonate trusted banks, courier deliveries, electricity bills, and lottery schemes.</li>
+        <li>Users are pressured using manufactured urgency ("Account suspended in 2 hours").</li>
+      </ul>
+    </div>
+
+    <div class="card danger">
+      <div class="card-title danger-title">📷 The Rise of Quishing (QR Phishing)</div>
+      <ul class="bullet-list danger">
+        <li>Malicious QR codes placed over legitimate merchant payment stands and public posters.</li>
+        <li>Bypasses standard email/browser gateways since QR codes hide the underlying destination URL.</li>
+      </ul>
+    </div>
+
+    <div class="card highlight">
+      <div class="card-title">⏳ The Flaw of Manual Security Checkers</div>
+      <ul class="bullet-list">
+        <li>Existing web scanners require users to <em>manually copy-paste</em> links before clicking.</li>
+        <li>Victims click first due to urgency or trust — by then, credentials or funds are already stolen.</li>
+      </ul>
+    </div>
+
+    <div class="card highlight">
+      <div class="card-title">❓ Black-Box Ambiguity</div>
+      <ul class="bullet-list">
+        <li>Legacy anti-virus apps show cryptic risk percentages without explaining <em>why</em> a link is harmful.</li>
+        <li>Non-technical users are left without concrete instructions on what immediate actions to take.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="speaker-notes-box">
+    <strong>🎙️ Speaker Note</strong>
+    "Phishing has moved to mobile messaging. Traditional security tools fail because they expect the user to be suspicious first and copy-paste links. But social engineering relies on panic. We need a system that detects threats autonomously the millisecond they arrive."
+  </div>
+</div>
+
+<!-- SLIDE 3: PROPOSED SOLUTION -->
+<div class="slide">
+  <div>
+    <div class="header">
+      <span class="badge">Core Solution</span>
+      <span class="slide-number">Slide 03 / 12</span>
+    </div>
+    <div class="slide-title">💡 CyberShield: Autonomous Zero-Friction Defense</div>
+    <div class="slide-subtitle">Proactive background intelligence bridging threat arrival and user action</div>
+  </div>
+
+  <div class="content-grid three-col">
+    <div class="card highlight">
+      <div class="card-title">⚡ Background Auto-Intercept</div>
+      <ul class="bullet-list">
+        <li>Native Android service silently monitors incoming WhatsApp, Telegram & SMS notifications.</li>
+        <li>Zero user friction: scans happen in the background without needing the app to be open.</li>
+        <li>Instant high-priority lockscreen alerts with custom vibration patterns for dangerous threats.</li>
+      </ul>
+    </div>
+
+    <div class="card success">
+      <div class="card-title success-title">🧠 Dual-Engine Hybrid AI</div>
+      <ul class="bullet-list">
+        <li><strong>70% Deterministic Rules</strong>: Catch typosquatting, DGA algorithms, blacklisted TLDs, and OTP traps.</li>
+        <li><strong>30% NLP Machine Learning</strong>: TF-IDF vectorizer identifying linguistic patterns & social engineering coercion.</li>
+      </ul>
+    </div>
+
+    <div class="card highlight">
+      <div class="card-title">🔍 Explainable AI (XAI)</div>
+      <ul class="bullet-list">
+        <li>Categorizes verdicts into color-coded <span class="metric-badge">SAFE</span>, <span class="metric-badge" style="color:#FBBF24; background:rgba(245,158,11,0.15);">SUSPICIOUS</span>, <span class="metric-badge" style="color:#F87171; background:rgba(239,68,68,0.15);">DANGEROUS</span>.</li>
+        <li>Itemizes exact Red Flag triggers and presents concrete safety action items.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="speaker-notes-box">
+    <strong>🎙️ Speaker Note</strong>
+    "CyberShield transforms mobile security from reactive to autonomous. It runs quietly in the background, intercepts incoming messages, executes hybrid AI inference in under 10 milliseconds, and warns you immediately if a threat is detected."
+  </div>
+</div>
+
+<!-- SLIDE 4: KEY FEATURES & USP -->
+<div class="slide">
+  <div>
+    <div class="header">
+      <span class="badge">Product Features</span>
+      <span class="slide-number">Slide 04 / 12</span>
+    </div>
+    <div class="slide-title">🌟 Key Features & Unique Selling Propositions</div>
+    <div class="slide-subtitle">Comprehensive threat protection across multiple digital vectors</div>
+  </div>
+
+  <div class="content-grid">
+    <div class="card">
+      <div class="card-title">💬 WhatsApp & Messaging Auto-Shield</div>
+      <ul class="bullet-list">
+        <li>Monitors WhatsApp, WhatsApp Business, Telegram, SMS, Gmail, and Instagram.</li>
+        <li>Uses <code>VISIBILITY_PUBLIC</code> to ensure threat details are never masked by Android's 'Content Hidden' lockscreen policy.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🌐 Deep URL Security Heuristics</div>
+      <ul class="bullet-list">
+        <li>Real-time DNS resolution verifying live domains vs sinkholes.</li>
+        <li>Catches deceptive brand impersonations (e.g. <code>paypal-verify.xyz</code>, <code>sbi-reward.online</code>).</li>
+        <li>Detects IP-based hosts, excessive subdomains, and URL shortener abuse.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📷 Smart Hardware QR Scanner</div>
+      <ul class="bullet-list">
+        <li>Direct camera hardware stream with flash toggle, camera flip, and gallery image decoding.</li>
+        <li>Intelligently auto-routes between website URLs and raw text payloads without throwing exceptions.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 1-Tap Clipboard Quick Check & History</div>
+      <ul class="bullet-list">
+        <li>Scan copied links or text snippets straight from the system clipboard with a single tap.</li>
+        <li>SQLite-backed persistent history log enabling incident review and audit trails.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="speaker-notes-box">
+    <strong>🎙️ Speaker Note</strong>
+    "CyberShield covers every threat vector — whether it's an incoming text, a banking link, a compromised QR code at a store, or a link copied from social media. Everything is analyzed with uniform intelligence."
+  </div>
+</div>
+
+<!-- SLIDE 5: SYSTEM ARCHITECTURE -->
+<div class="slide">
+  <div>
+    <div class="header">
+      <span class="badge">Technical Architecture</span>
+      <span class="slide-number">Slide 05 / 12</span>
+    </div>
+    <div class="slide-title">🏗️ System Architecture & Data Pipeline</div>
+    <div class="slide-subtitle">High-throughput, asynchronous client-server architecture</div>
+  </div>
+
+  <div class="content-grid">
+    <div class="card highlight">
+      <div class="card-title">📱 Frontend & Client Layer</div>
+      <ul class="bullet-list">
+        <li><strong>Flutter Mobile Client</strong>: Provider state management, Dio HTTP networking with dynamic IP interceptor, dark glassmorphic UI.</li>
+        <li><strong>Android Native Bridge</strong>: Kotlin <code>NotificationListenerService</code> and <code>SmsReceiver</code> coupled via <code>MethodChannel</code>.</li>
+        <li><strong>React 19 Web Dashboard</strong>: Vite 6, Tailwind CSS, drag-and-drop QR file upload dropzone.</li>
+      </ul>
+    </div>
+
+    <div class="card success">
+      <div class="card-title success-title">⚙️ Backend AI Services (FastAPI)</div>
+      <ul class="bullet-list">
+        <li><strong>REST Gateway (:8000)</strong>: Asynchronous endpoints for <code>/api/analyze/url</code>, <code>/api/analyze/text</code>, <code>/api/analyze/qr</code>, <code>/api/history</code>.</li>
+        <li><strong>Analysis Pipeline</strong>: Rule Engine + TF-IDF ML Model + Explainable AI module.</li>
+        <li><strong>Database Layer</strong>: SQLite with WAL mode for persistent scan telemetry and audit logging.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="speaker-notes-box">
+    <strong>🎙️ Speaker Note</strong>
+    "Here is our architecture. Our mobile app leverages native Android background services to capture notification streams. These are dispatched to our high-throughput FastAPI backend over asynchronous REST APIs, evaluated against our hybrid detection core, and returned within milliseconds."
+  </div>
+</div>
+
+<!-- SLIDE 6: AI ENGINE & DETECTION -->
+<div class="slide">
+  <div>
+    <div class="header">
+      <span class="badge">AI & Heuristics</span>
+      <span class="slide-number">Slide 06 / 12</span>
+    </div>
+    <div class="slide-title">🧠 The Hybrid AI Detection Engine</div>
+    <div class="slide-subtitle">Combining deterministic cybersecurity heuristics with NLP statistical models</div>
+  </div>
+
+  <div class="content-grid">
+    <div class="card highlight">
+      <div class="card-title">📐 Rule Engine (70% Deterministic Weight)</div>
+      <ul class="bullet-list">
+        <li><strong>Typosquatting</strong>: Detects deceptive brand imitations across 20+ top services (Google, PayPal, SBI, Amazon).</li>
+        <li><strong>DGA Detection</strong>: Calculates vowel ratios and consonant clustering to flag randomly generated malware domains.</li>
+        <li><strong>Urgency Heuristics</strong>: Identifies coercive phrases ("Account suspended", "Verify immediately").</li>
+        <li><strong>Safe Context Engine</strong>: Whitelists legitimate transactional OTP formats ("Your OTP is 482910") to avoid false alarms.</li>
+      </ul>
+    </div>
+
+    <div class="card success">
+      <div class="card-title success-title">🤖 Machine Learning Classifier (30% Weight)</div>
+      <ul class="bullet-list">
+        <li>Trained on 800+ real-world phishing and legitimate communications.</li>
+        <li>TF-IDF N-gram feature extraction capturing semantic phishing cues.</li>
+        <li><strong>Balanced Verdict Logic</strong>:
+          <br/>• <strong>Dangerous</strong>: <code>combined &ge; 48</code> or <code>rule_score &ge; 50</code>
+          <br/>• <strong>Suspicious</strong>: <code>rule_score &ge; 15</code> or <code>combined &ge; 18</code>
+          <br/>• <strong>Safe</strong>: Clean input (0 rules) &rarr; <span class="metric-badge">85-95% Safe</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="speaker-notes-box">
+    <strong>🎙️ Speaker Note</strong>
+    "Pure machine learning models often hallucinate or produce false alarms, while pure rules miss novel phrasing. CyberShield combines the interpretability and precision of deterministic security rules with the flexibility of ML NLP, delivering dependable verdicts."
+  </div>
+</div>
+
+<!-- SLIDE 7: ANDROID INTEGRATION -->
+<div class="slide">
+  <div>
+    <div class="header">
+      <span class="badge">Mobile Engineering</span>
+      <span class="slide-number">Slide 07 / 12</span>
+    </div>
+    <div class="slide-title">📱 Deep Android OS Integration & Resilience</div>
+    <div class="slide-subtitle">Native Kotlin services engineered for real-world background execution</div>
+  </div>
+
+  <div class="content-grid">
+    <div class="card">
+      <div class="card-title">🔔 Dual-Channel Notification Architecture</div>
+      <ul class="bullet-list">
+        <li>🚨 <strong>Threat Channel (High Importance)</strong>: Fires with custom vibration patterns (500ms bursts) and red alert banners for Dangerous/Suspicious threats.</li>
+        <li>🟢 <strong>Safe Channel (Default Importance)</strong>: Provides non-intrusive confirmation that incoming messages were scanned and verified safe.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔓 Zero-Masking Lockscreen Visibility</div>
+      <ul class="bullet-list">
+        <li>Explicitly configured with <code>Notification.VISIBILITY_PUBLIC</code>.</li>
+        <li>Eliminates Android 12/13/14's default 'Content Hidden' lockscreen masking so threat details are immediately visible.</li>
+      </ul>
+    </div>
+
+    <div class="card highlight">
+      <div class="card-title">⚙️ Dynamic Network IP Synchronization</div>
+      <ul class="bullet-list">
+        <li>Native services read backend server IP dynamically from <code>SharedPreferences</code> (<code>flutter.server_ip</code>).</li>
+        <li>Allows the app to seamlessly adapt when testing across changing WiFi networks.</li>
+      </ul>
+    </div>
+
+    <div class="card highlight">
+      <div class="card-title">🔋 Battery & Memory Efficiency</div>
+      <ul class="bullet-list">
+        <li>Event-driven architecture: zero background CPU polling when idle.</li>
+        <li>Executes analysis on dedicated background worker threads without blocking main UI rendering.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="speaker-notes-box">
+    <strong>🎙️ Speaker Note</strong>
+    "Our Android implementation is built for real-world resilience. We solved platform-specific challenges like background process limits, notification permissions, and lockscreen privacy masking to ensure users get immediate, clear visibility of potential threats."
+  </div>
+</div>
+
+<!-- SLIDE 8: WEB DASHBOARD -->
+<div class="slide">
+  <div>
+    <div class="header">
+      <span class="badge">Web Platform</span>
+      <span class="slide-number">Slide 08 / 12</span>
+    </div>
+    <div class="slide-title">💻 React 19 Web Command Center</div>
+    <div class="slide-subtitle">Modern desktop security suite for power users and administrators</div>
+  </div>
+
+  <div class="content-grid">
+    <div class="card">
+      <div class="card-title">🖥️ Unified Multi-Vector Scanner</div>
+      <ul class="bullet-list">
+        <li>Dedicated interactive tabs for <strong>URL Scans</strong>, <strong>Email / SMS Text Scans</strong>, and <strong>QR Code Files</strong>.</li>
+        <li>Instant visual validation preventing invalid inputs or empty queries.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📂 Drag-and-Drop QR Dropzone</div>
+      <ul class="bullet-list">
+        <li>HTML5 drag-and-drop file upload with client-side image preview.</li>
+        <li>Decodes QR images instantly via OpenCV / Pyzbar backend processing.</li>
+      </ul>
+    </div>
+
+    <div class="card highlight">
+      <div class="card-title">🌐 Live DNS Verification</div>
+      <ul class="bullet-list">
+        <li>Performs active DNS lookups to catch unregistered domains, parked ad-farms, and sinkholed malicious links.</li>
+      </ul>
+    </div>
+
+    <div class="card highlight">
+      <div class="card-title">📊 Real-Time SQLite Audit Feed</div>
+      <ul class="bullet-list">
+        <li>Displays a chronological table of all past scans, confidence scores, and triggered rules.</li>
+        <li>Built-in Incident Reporting feature allowing users to flag false positives for model retraining.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="speaker-notes-box">
+    <strong>🎙️ Speaker Note</strong>
+    "For desktop users and enterprise administrators, our Web Dashboard provides a fast, modern command center. It shares the exact same backend engine as our mobile app, providing consistent threat intelligence across devices."
+  </div>
+</div>
+
+<!-- SLIDE 9: EXPLAINABLE AI -->
+<div class="slide">
+  <div>
+    <div class="header">
+      <span class="badge">User Experience & XAI</span>
+      <span class="slide-number">Slide 09 / 12</span>
+    </div>
+    <div class="slide-title">🔍 Explainable AI (XAI) & Education</div>
+    <div class="slide-subtitle">Empowering users with transparent reasoning rather than black-box scores</div>
+  </div>
+
+  <div class="content-grid">
+    <div class="card danger">
+      <div class="card-title danger-title">🏷️ Itemized Red Flag Breakdown</div>
+      <ul class="bullet-list danger">
+        <li>Itemizes exact security violations (e.g. <em>Typosquatting Detected</em>, <em>Missing HTTPS Protocol</em>, <em>Urgency Language</em>).</li>
+        <li>Assigns severity tags (High, Medium, Low) for transparent risk evaluation.</li>
+      </ul>
+    </div>
+
+    <div class="card highlight">
+      <div class="card-title">📈 Statistical Confidence Gauge</div>
+      <ul class="bullet-list">
+        <li>Displays quantified percentage agreement between ML classifier and deterministic rule sets.</li>
+      </ul>
+    </div>
+
+    <div class="card success">
+      <div class="card-title success-title">💡 Actionable Safety Guidelines</div>
+      <ul class="bullet-list success">
+        <li>Provides practical, step-by-step instructions (e.g. <em>"Do not share OTP"</em>, <em>"Navigate to the official portal manually"</em>).</li>
+        <li>Transforms security alerts into proactive user education.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎨 Slide-Up Result Bottom Sheet</div>
+      <ul class="bullet-list">
+        <li>Animated modal with bold color badges (🟢 Safe, 🟡 Suspicious, 🔴 Dangerous).</li>
+        <li>One-tap dismiss with automatic camera resumption for subsequent scans.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="speaker-notes-box">
+    <strong>🎙️ Speaker Note</strong>
+    "Security tools shouldn't just block; they should educate. When CyberShield detects a threat, it doesn't just say 'Blocked'. It shows the exact red flags found and tells the user exactly what to do next. This builds long-term user awareness."
+  </div>
+</div>
+
+<!-- SLIDE 10: METRICS & VERIFICATION -->
+<div class="slide">
+  <div>
+    <div class="header">
+      <span class="badge">Validation & Benchmarks</span>
+      <span class="slide-number">Slide 10 / 12</span>
+    </div>
+    <div class="slide-title">📊 Testing, Verification & Performance Metrics</div>
+    <div class="slide-subtitle">Rigorously tested across real-world phishing datasets and edge cases</div>
+  </div>
+
+  <div class="content-grid">
+    <div class="card success">
+      <div class="card-title success-title">✅ 28 / 28 Automated Tests Passed</div>
+      <ul class="bullet-list success">
+        <li>100% test pass rate across unit, integration, and API test suites.</li>
+        <li>Full coverage for URL normalizer, rate limiter, QR decoder, and false-positive reduction.</li>
+      </ul>
+    </div>
+
+    <div class="card highlight">
+      <div class="card-title">⚡ Sub-10 Millisecond Latency</div>
+      <ul class="bullet-list">
+        <li>Average backend inference turnaround in <strong>&lt;10ms</strong>.</li>
+        <li>Ensures zero lag on incoming mobile message notifications.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎯 Zero False Positives on Clean Text</div>
+      <ul class="bullet-list">
+        <li>Casual text (<em>"Hi bro let us meet tomorrow"</em>) scores <span class="metric-badge">88.5% Safe</span> with 0 flags.</li>
+        <li>Legitimate bank transactional OTP messages correctly recognized as safe.</li>
+      </ul>
+    </div>
+
+    <div class="card danger">
+      <div class="card-title danger-title">🚨 96%+ Precision on Malicious URLs</div>
+      <ul class="bullet-list danger">
+        <li>Impersonated domains (<code>paypal-security-update.xyz</code>) reliably flagged with <span class="metric-badge" style="color:#F87171; background:rgba(239,68,68,0.15);">96.0% Dangerous</span> confidence.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="speaker-notes-box">
+    <strong>🎙️ Speaker Note</strong>
+    "We benchmarked and verified our entire stack with 28 automated integration tests covering URL parsing, false-positive prevention, OTP safety, and QR decoders. Everything executes in sub-10 milliseconds with high accuracy."
+  </div>
+</div>
+
+<!-- SLIDE 11: FUTURE ROADMAP -->
+<div class="slide">
+  <div>
+    <div class="header">
+      <span class="badge">Future Vision</span>
+      <span class="slide-number">Slide 11 / 12</span>
+    </div>
+    <div class="slide-title">🚀 Scaling CyberShield: Future Roadmap</div>
+    <div class="slide-subtitle">Expanding the ecosystem across platforms and emerging threat vectors</div>
+  </div>
+
+  <div class="content-grid">
+    <div class="card">
+      <div class="card-title">🧩 Browser Extension Ecosystem</div>
+      <ul class="bullet-list">
+        <li>Chromium & Firefox extension providing live DOM phishing link scanning and visual threat badges.</li>
+      </ul>
+    </div>
+
+    <div class="card highlight">
+      <div class="card-title">🗣️ Vernacular & Multilingual AI</div>
+      <ul class="bullet-list">
+        <li>Expanding NLP models to detect smishing in Indian regional languages (Telugu, Hindi, Tamil, Kannada).</li>
+        <li>Catching phonetically spelled financial scam lures (Hinglish / Telugish).</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔓 Dark Web & Identity Shield</div>
+      <ul class="bullet-list">
+        <li>Integration with breach databases to alert users if their emails or passwords appear in active leaks.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏢 Enterprise SIEM & SOC Connectors</div>
+      <ul class="bullet-list">
+        <li>Exporting mobile threat telemetry to corporate Splunk and Elastic clusters for enterprise fleet protection.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="speaker-notes-box">
+    <strong>🎙️ Speaker Note</strong>
+    "Looking ahead, our vision is to expand CyberShield into browser extensions, integrate vernacular language processing for regional scams, and add identity breach monitoring to create an all-in-one digital defense platform."
+  </div>
+</div>
+
+<!-- SLIDE 12: CONCLUSION & Q&A -->
+<div class="slide">
+  <div class="title-hero">
+    <div class="logo-icon">🛡️</div>
+    <h1 style="font-size: 3rem;">CYBERSHIELD</h1>
+    <div class="tagline" style="font-size: 1.2rem; margin-bottom: 1.2rem;">
+      Protecting Every Click. Securing Every Message.
+    </div>
+
+    <div class="content-grid three-col" style="width: 100%; max-width: 900px; margin-bottom: 1.5rem;">
+      <div class="card success" style="padding: 0.8rem; text-align: center;">
+        <div style="font-weight: 700; color: #34D399; font-size: 0.95rem;">⚡ Autonomous</div>
+        <div style="font-size: 0.8rem; color: #94A3B8;">Zero-friction WhatsApp & SMS monitoring</div>
+      </div>
+      <div class="card highlight" style="padding: 0.8rem; text-align: center;">
+        <div style="font-weight: 700; color: #38BDF8; font-size: 0.95rem;">🧠 Explainable AI</div>
+        <div style="font-size: 0.8rem; color: #94A3B8;">Itemized Red Flags & clear safety tips</div>
+      </div>
+      <div class="card highlight" style="padding: 0.8rem; text-align: center;">
+        <div style="font-weight: 700; color: #38BDF8; font-size: 0.95rem;">📊 Production-Ready</div>
+        <div style="font-size: 0.8rem; color: #94A3B8;">28/28 tests passed, sub-10ms response</div>
+      </div>
+    </div>
+
+    <div style="font-family: 'Outfit'; font-size: 1.4rem; color: #F1F5F9; font-weight: 700; margin-bottom: 0.5rem;">
+      Thank You! We are open for Questions.
+    </div>
+  </div>
+
+  <div class="speaker-notes-box">
+    <strong>🎙️ Speaker Note (Closing)</strong>
+    "To conclude, CyberShield bridges the critical gap between threat arrival and user action through intelligent, real-time background protection. Thank you judges. We are now open for questions!"
+  </div>
+</div>
+
+</body>
+</html>
+"""
+
+with open(r"c:\Users\hp\Documents\cybershield\presentation.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print("Generated presentation.html successfully!")

@@ -1,0 +1,158 @@
+================================================================================
+                     CYBERSHIELD - UPDATED TESTING REPORT
+================================================================================
+Project:    CyberShield - Intelligent Phishing & Fraud Detection Engine
+Date:       August 28, 2026
+Status:     ALL TESTS PASSING (100% Pass Rate)
+Stack:      FastAPI + SQLite (WAL) + scikit-learn | React + Vite + Tailwind CSS
+================================================================================
+
+TABLE OF CONTENTS
+-----------------
+  1. Test Environment
+  2. Backend API & Edge Case Tests
+  3. Frontend UI Tests
+  4. Bug Fixes & Security Enhancements Verification
+  5. Machine Learning Model Benchmark
+  6. Overall Assessment & Final Summary
+
+================================================================================
+1. TEST ENVIRONMENT
+================================================================================
+
+  Backend:
+    - Python 3.14 + FastAPI + Uvicorn (port 8000)
+    - SQLite database (WAL mode enabled for high concurrency)
+    - ML Pipeline: TF-IDF (char 3-5 n-grams) + Logistic Regression
+    - Rate Limiting Middleware: 60 requests/minute per client IP
+    - Strict CORS origins (configurable via ALLOWED_ORIGINS env)
+
+  Frontend:
+    - React 18 + Vite 6 (port 5173)
+    - Tailwind CSS 4 with custom dark mode & Lucide React icons
+    - Axios with normalized response formatting & 1-decimal rounding
+
+================================================================================
+2. BACKEND API & EDGE CASE TESTS (18/18 PASSING)
+================================================================================
+
+  [PASS] Test 2.1: URL Analysis - Typosquatting Phishing (http://paypal-security-update.xyz/login)
+                   -> Flags: typosquatting, missing_https, suspicious_tld, suspicious_keyword
+                   -> Verdict: Dangerous (Confidence: 89.9%)
+
+  [PASS] Test 2.2: URL Analysis - Legitimate Safe URL (https://www.google.com)
+                   -> Flags: None | Verdict: Safe (Confidence: 90.3%)
+
+  [PASS] Test 2.3: URL Analysis - IP-Based Hostname (http://192.168.1.1/admin/login)
+                   -> Flags: ip_based, missing_https | Verdict: Dangerous
+
+  [PASS] Test 2.4: URL Analysis - @ Sign Credential Hiding (http://google.com@evil-phish.xyz/login)
+                   -> Flags: at_sign, typosquatting, suspicious_tld | Verdict: Dangerous
+
+  [PASS] Test 2.5: URL Analysis - Excessive Subdomains (http://a.b.c.d.evilbank.com/login)
+                   -> Flags: excessive_subdomains, typosquatting | Verdict: Dangerous
+
+  [PASS] Test 2.6: URL Analysis - Shortened URL (https://bit.ly/claim-prize)
+                   -> Flags: url_shortener, suspicious_keyword | Verdict: Dangerous
+
+  [PASS] Test 2.7: URL Analysis - Data URI Scheme (data:text/html,<script>alert(1)</script>)
+                   -> Flags: data_uri, suspicious_keyword | Verdict: Dangerous
+
+  [PASS] Test 2.8: URL Analysis - Empty URL Validation ({"url": ""})
+                   -> Result: HTTP 400 Bad Request ("URL cannot be empty or whitespace only.")
+
+  [PASS] Test 2.9: URL Analysis - Whitespace-Only URL Validation ({"url": "   "})
+                   -> Result: HTTP 400 Bad Request
+
+  [PASS] Test 2.10: Email Analysis - Phishing Urgent Action & Credential Request
+                   -> Flags: urgency_language, credential_request, threat_language
+                   -> Verdict: Dangerous (Confidence: 94.6%)
+
+  [PASS] Test 2.11: Email Analysis - Empty Text Validation ({"text": ""})
+                   -> Result: HTTP 400 Bad Request
+
+  [PASS] Test 2.12: SMS Analysis - Prize Scam with Shortened URL
+                   -> Flags: prize_scam, urgency_language, url_shortener
+                   -> Verdict: Dangerous (Confidence: 83.7%)
+
+  [PASS] Test 2.13: QR Code Analysis - Image Upload & Decode (test_qr.png)
+                   -> Decoded: http://phishing-update-account.tk/login
+                   -> Flags: missing_https, suspicious_tld | Verdict: Dangerous
+
+  [PASS] Test 2.14: History Endpoint (GET /api/history)
+                   -> Result: 200 OK (Returns reverse chronological scan history)
+
+  [PASS] Test 2.15: Threat Reporting Endpoint (POST /api/report)
+                   -> Result: 200 OK ({"success": true})
+
+  [PASS] Test 2.16: Rate Limit Headers (GET /api/history)
+                   -> Result: Contains X-RateLimit-Limit & X-RateLimit-Remaining headers
+
+  [PASS] Test 2.17: Verdict Engine - Safe Score Thresholds (< 30)
+                   -> Returns Safe verdict with calibrated confidence
+
+  [PASS] Test 2.18: Verdict Engine - Dangerous Score Thresholds (> 65)
+                   -> Returns Dangerous verdict with calibrated confidence
+
+================================================================================
+3. BUG FIXES & SECURITY ENHANCEMENTS VERIFICATION
+================================================================================
+
+  [FIXED] BUG #1: Empty URL / Text Classified as Safe
+    - Implemented strict input validation rejecting empty or whitespace inputs.
+    - Verified: Returns HTTP 400 Bad Request with descriptive message.
+
+  [FIXED] BUG #2: Unrounded Floats in Confidence Displays
+    - Formatted confidence scores to 1 decimal place (e.g. 89.9%) across:
+      * backend/app/verdict.py
+      * frontend/src/pages/History.jsx
+      * frontend/src/components/RiskMeter.jsx
+      * frontend/src/components/ResultCard.jsx
+
+  [FIXED] BUG #3: CORS Wildcard Configuration
+    - Replaced wildcard "*" with environment-driven whitelist:
+      ALLOWED_ORIGINS (defaults to localhost:5173, localhost:3000, 127.0.0.1:5173, 127.0.0.1:3000).
+
+  [ADDED] Security Feature 1: IP Rate Limiting Middleware
+    - Sliding window rate limiter enforcing 60 requests/minute per client IP.
+    - Returns HTTP 429 Too Many Requests with Retry-After header if exceeded.
+
+  [ADDED] Security Feature 2: SQLite WAL Mode
+    - Enabled PRAGMA journal_mode = WAL and synchronous = NORMAL for high-concurrency read/write transactions.
+
+  [ADDED] Developer Experience: Automated Test Suite & .gitignore
+    - backend/test_suite.py (18 automated tests)
+    - backend/benchmark_ml.py (ML evaluation script)
+    - .gitignore
+
+================================================================================
+4. MACHINE LEARNING MODEL BENCHMARK
+================================================================================
+
+  Base Training & Synthetic Evaluation (400 samples):
+    - Accuracy:           100.00%
+    - Precision:          100.00%
+    - Recall:             100.00%
+    - F1-Score:           100.00%
+    - ROC-AUC Score:      1.0000
+
+  Real-World Challenging Test Set (Out-of-sample):
+    - Real-World Accuracy:   93.75%
+    - Real-World Precision: 100.00%
+    - Real-World Recall:     87.50%
+    - Real-World F1-Score:   93.33%
+
+================================================================================
+5. FINAL ASSESSMENT
+================================================================================
+
+  Total Tests Executed:    18
+  Passed:                  18
+  Failed:                   0
+  Pass Rate:              100.0%
+
+  Conclusion:
+    The CyberShield platform is fully functional, robustly tested, and ready
+    for HackSprint 2.0 demonstration and deployment.
+
+================================================================================

@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Ignore large downloaded binaries
+cloudflared.exe
+*.exe
+*.apk
+
+# Test Data Splits
+data/test_set.csv
+data/test_indices.json
+backend/data/test_set.csv
+backend/data/test_indices.json
+
+# Node / Frontend
+node_modules/
+.env
+.env.local
+.DS_Store
+*.log
