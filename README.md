@@ -1,3 +1,12 @@
+---
+title: CyberShield
+emoji: 🛡️
+colorFrom: blue
+colorTo: cyan
+sdk: docker
+app_port: 7860
+---
+
 # 🛡️ Cyber Shield
 
 **Intelligent Phishing, Scam & Cyber-Fraud Detection Platform**
