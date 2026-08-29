@@ -37,15 +37,15 @@ def explain_rules(triggered_rules: list, input_type: str = "url", input_text: st
 
     # Lead summary based on the primary attack vector
     if has_banking and has_urgency and has_credentials:
-        explanations.append("🚨 Critical Banking Phishing Attempt: Attackers are using false urgency (e.g. account suspension) to pressure you into submitting your confidential bank credentials or OTPs.")
+        explanations.append("[Critical Banking Phishing Attempt] Attackers are using false urgency (e.g. account suspension) to pressure you into submitting your confidential bank credentials or OTPs.")
     elif has_prize:
-        explanations.append("🎁 Lottery / Advance-Fee Fraud: Uses fake winnings or rewards to lure you into sharing banking information or paying fraudulent processing fees.")
+        explanations.append("[Lottery / Advance-Fee Fraud] Uses fake winnings or rewards to lure you into sharing banking information or paying fraudulent processing fees.")
     elif has_typosquatting:
-        explanations.append("🎭 Brand Impersonation (Typosquatting): Deceptive domain designed to mimic a trusted service and trick users into entering credentials on a spoofed login portal.")
+        explanations.append("[Brand Impersonation / Typosquatting] Deceptive domain designed to mimic a trusted service and trick users into entering credentials on a spoofed login portal.")
     elif has_banking:
-        explanations.append("💳 Financial Harvesting Alert: Unverified message requesting payment cards, account details, or PINs.")
+        explanations.append("[Financial Harvesting Alert] Unverified message requesting payment cards, account details, or PINs.")
     elif has_urgency and has_threat:
-        explanations.append("⚠️ Coercive Threat Language: Uses panic-inducing claims (police action, legal penalties, permanent account deletion) to prevent rational verification.")
+        explanations.append("[Coercive Threat Language] Uses panic-inducing claims (police action, legal penalties, permanent account deletion) to prevent rational verification.")
 
     # Detailed itemized rules
     for rule in triggered_rules:
