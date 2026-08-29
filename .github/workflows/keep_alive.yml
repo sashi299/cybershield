@@ -1,0 +1,23 @@
+﻿name: CyberShield Cloud Keep-Alive (24/7 Always Awake)
+
+on:
+  schedule:
+    # Trigger every 10 minutes in the cloud 24/7
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping-render:
+    name: Ping Render Server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send HTTP Ping to Render
+        run: |
+          echo "Pinging CyberShield Render Server..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 45 https://cybershield-wans.onrender.com/ || echo "000")
+          echo "Render Server Response Code: $STATUS"
+          if [ "$STATUS" = "200" ] || [ "$STATUS" = "301" ] || [ "$STATUS" = "302" ]; then
+            echo "SUCCESS: Server is AWAKE and RUNNING!"
+          else
+            echo "Warming up server (Current status: $STATUS)..."
+          fi
