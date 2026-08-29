@@ -195,7 +195,35 @@ def _domain_resolves_dns(hostname: str) -> bool:
 
 @router.post("/api/analyze/url")
 def analyze_url(req: URLRequest):
-    url = validate_and_normalize_url(req.url)
+    try:
+        url = validate_and_normalize_url(req.url)
+    except HTTPException as e:
+        # Return a proper verdict result instead of HTTP 400 error
+        detail_msg = e.detail if hasattr(e, 'detail') else str(e)
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO scans (input_type, input_value, verdict, confidence, red_flags, explanation, recommendation, tips)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', ("url", req.url, "Safe", 0.0, "invalid_url",
+                  detail_msg,
+                  "The entered URL is not valid. Please check the address and try again.",
+                  "- Check spelling of the domain name.\n- Make sure to include the full URL.\n- Use the Text/SMS tab for non-URL content."))
+            conn.commit()
+            scan_id = cursor.lastrowid
+        return {
+            "id": scan_id,
+            "verdict": "Safe",
+            "confidence": 0.0,
+            "redFlags": [{
+                "rule_id": "invalid_url",
+                "description": detail_msg,
+                "severity": "info"
+            }],
+            "explanation": detail_msg,
+            "recommendation": "The entered URL is not valid. Please check the address and try again.",
+            "tips": ["Check spelling of the domain name.", "Make sure to include the full URL.", "Use the Text/SMS tab for non-URL content."]
+        }
     rule_results = analyze_url_rules(url)
     ml_prob = predict(url)
     
@@ -209,11 +237,31 @@ def analyze_url(req: URLRequest):
         resolves = _domain_resolves_dns(hostname)
         if not resolves:
             if rule_results["score"] == 0:
-                # Completely non-existent / fake dummy domain
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"'{req.url}' is not an active or registered website (DNS lookup failed). Please check the domain spelling or enter a live website URL."
-                )
+                # Non-existent domain — return a proper result instead of 400 error
+                with get_db_connection() as conn:
+                    cursor = conn.cursor()
+                    cursor.execute('''
+                        INSERT INTO scans (input_type, input_value, verdict, confidence, red_flags, explanation, recommendation, tips)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    ''', ("url", url, "Safe", 70.0, "inactive_domain", 
+                          f"'{req.url}' does not appear to be an active or registered website (DNS lookup failed). This domain is not currently reachable on the internet.",
+                          "This domain is not active. It cannot harm you right now, but be cautious if you received this link from someone.",
+                          "- Verify the spelling of the domain name.\n- Do not enter credentials on unreachable websites.\n- The domain may be expired, parked, or not yet registered."))
+                    conn.commit()
+                    scan_id = cursor.lastrowid
+                return {
+                    "id": scan_id,
+                    "verdict": "Safe",
+                    "confidence": 70.0,
+                    "redFlags": [{
+                        "rule_id": "inactive_domain",
+                        "description": f"'{req.url}' is not an active website. DNS lookup failed — the domain is unreachable, expired, or not registered.",
+                        "severity": "info"
+                    }],
+                    "explanation": f"'{req.url}' does not appear to be an active or registered website (DNS lookup failed). This domain is not currently reachable on the internet.",
+                    "recommendation": "This domain is not active. It cannot harm you right now, but be cautious if you received this link from someone.",
+                    "tips": ["Verify the spelling of the domain name.", "Do not enter credentials on unreachable websites.", "The domain may be expired, parked, or not yet registered."]
+                }
             else:
                 # Phishing simulation or sinkholed malicious domain
                 rule_results["triggered_rules"].append({
@@ -316,7 +364,33 @@ def analyze_qr(file: UploadFile = File(...)):
         contents = file.file.read()
         decoded_content = decode_qr(contents)
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        # Return a proper result instead of 400 error
+        error_msg = str(e)
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO scans (input_type, input_value, verdict, confidence, red_flags, explanation, recommendation, tips)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', ("qr", "invalid_qr", "Safe", 0.0, "invalid_qr",
+                  f"Could not decode QR code: {error_msg}. The image may not contain a valid QR code.",
+                  "The uploaded image does not contain a readable QR code. Try scanning a clearer image.",
+                  "- Make sure the image contains a QR code.\n- Ensure the QR code is clearly visible and not blurry.\n- Try taking a new photo with better lighting."))
+            conn.commit()
+            scan_id = cursor.lastrowid
+        return {
+            "id": scan_id,
+            "decoded_url": "",
+            "verdict": "Safe",
+            "confidence": 0.0,
+            "redFlags": [{
+                "rule_id": "invalid_qr",
+                "description": f"Could not decode QR code: {error_msg}",
+                "severity": "info"
+            }],
+            "explanation": f"Could not decode QR code: {error_msg}. The image may not contain a valid QR code.",
+            "recommendation": "The uploaded image does not contain a readable QR code. Try scanning a clearer image.",
+            "tips": ["Make sure the image contains a QR code.", "Ensure the QR code is clearly visible and not blurry.", "Try taking a new photo with better lighting."]
+        }
     
     cleaned = decoded_content.strip()
     is_url = cleaned.lower().startswith(('http://', 'https://', 'www.')) or ('.' in cleaned and ' ' not in cleaned and len(cleaned.split('.')) >= 2)
