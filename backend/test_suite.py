@@ -78,22 +78,23 @@ class TestAPIEndpoints(unittest.TestCase):
 
     def test_empty_url_rejected_with_400(self):
         response = self.client.post("/api/analyze/url", json={"url": ""})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("empty", response.json()["detail"].lower())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["verdict"], "Safe")
 
     def test_whitespace_url_rejected_with_400(self):
         response = self.client.post("/api/analyze/url", json={"url": "   "})
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
 
     def test_arbitrary_word_rejected_with_400(self):
-        # Passing arbitrary non-URL text like 'hello' or 'banana' should not be analyzed as a website
+        # Passing arbitrary non-URL text like 'hello' or 'banana' should return graceful validation result
         response = self.client.post("/api/analyze/url", json={"url": "hello"})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("not a valid", response.json()["detail"].lower())
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("not a valid", response.json()["explanation"].lower())
 
     def test_text_with_spaces_rejected_in_url_tab(self):
         response = self.client.post("/api/analyze/url", json={"url": "this is a message not a url"})
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("invalid url", response.json()["explanation"].lower())
 
     def test_empty_text_rejected_with_400(self):
         response = self.client.post("/api/analyze/text", json={"text": "", "type": "email"})

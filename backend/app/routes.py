@@ -272,8 +272,8 @@ def analyze_url(req: URLRequest):
                 rule_results["score"] = max(rule_results["score"], 50)
     
     verdict_data = calculate_verdict(rule_results["score"], ml_prob)
-    explanation = explain_rules(rule_results["triggered_rules"], input_type="url")
-    recommendation, tips = generate_recommendations(verdict_data["verdict"], "phishing URL")
+    explanation = explain_rules(rule_results["triggered_rules"], input_type="url", input_text=url)
+    recommendation, tips = generate_recommendations(verdict_data["verdict"], "phishing URL", input_text=url)
     
     red_flags = ", ".join([r["rule_id"] for r in rule_results["triggered_rules"]])
     
@@ -334,8 +334,8 @@ def analyze_text(req: TextRequest):
     ml_prob = max(ml_scores)
     
     verdict_data = calculate_verdict(max_rule_score, ml_prob)
-    explanation = explain_rules(all_triggered_rules, input_type="text")
-    recommendation, tips = generate_recommendations(verdict_data["verdict"], threat_type)
+    explanation = explain_rules(all_triggered_rules, input_type="text", input_text=text)
+    recommendation, tips = generate_recommendations(verdict_data["verdict"], threat_type, input_text=text)
     
     red_flags = ", ".join([r["rule_id"] for r in all_triggered_rules])
     
@@ -399,14 +399,14 @@ def analyze_qr(file: UploadFile = File(...)):
         rule_results = analyze_url_rules(cleaned)
         ml_prob = predict(cleaned)
         verdict_data = calculate_verdict(rule_results["score"], ml_prob)
-        explanation = explain_rules(rule_results["triggered_rules"], input_type="url")
-        recommendation, tips = generate_recommendations(verdict_data["verdict"], "phishing URL")
+        explanation = explain_rules(rule_results["triggered_rules"], input_type="url", input_text=cleaned)
+        recommendation, tips = generate_recommendations(verdict_data["verdict"], "phishing URL", input_text=cleaned)
     else:
         rule_results = analyze_text_rules(cleaned)
         ml_prob = predict(cleaned)
         verdict_data = calculate_verdict(rule_results["score"], ml_prob)
-        explanation = explain_rules(rule_results["triggered_rules"], input_type="text")
-        recommendation, tips = generate_recommendations(verdict_data["verdict"], "general")
+        explanation = explain_rules(rule_results["triggered_rules"], input_type="text", input_text=cleaned)
+        recommendation, tips = generate_recommendations(verdict_data["verdict"], "general", input_text=cleaned)
     
     red_flags = ", ".join([r["rule_id"] for r in rule_results["triggered_rules"]])
     
