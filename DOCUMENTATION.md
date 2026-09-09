@@ -1,7 +1,7 @@
 # 🛡️ Cyber Shield — Comprehensive Project Documentation
 
 **An Intelligent Phishing, Scam & Cyber-Fraud Detection Platform**  
-*Built for HackSprint 2.0 Hackathon*
+
 
 ---
 
@@ -481,4 +481,3 @@ python backend/test_suite.py
 
 ---
 
-*Cyber Shield — HackSprint 2.0 © 2026*
