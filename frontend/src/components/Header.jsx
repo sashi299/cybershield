@@ -1,63 +1,88 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Shield, Cpu, Zap } from 'lucide-react';
 import { getSystemStatus } from '../api';
+
+// Distinctive Snapdragon Hexagon Silicon Chip Icon
+function SnapdragonHexagonIcon({ className = "w-5 h-5", color = "#CE0F3D" }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L20.66 7V17L12 22L3.34 17V7L12 2Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+      <path d="M12 6.5L16.8 9.3V14.7L12 17.5L7.2 14.7V9.3L12 6.5Z" fill={color} fillOpacity="0.2" stroke={color} strokeWidth="1.2" />
+      <circle cx="12" cy="12" r="2.4" fill={color} />
+      <path d="M12 2V6.5M12 17.5V22M3.34 7L7.2 9.3M16.8 14.7L20.66 17M3.34 17L7.2 14.7M16.8 9.3L20.66 7" stroke={color} strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 export default function Header() {
   const location = useLocation();
   const [systemStatus, setSystemStatus] = useState(null);
 
   useEffect(() => {
-    // Fetch NPU/system status for the badge indicator
     getSystemStatus()
       .then(data => setSystemStatus(data))
       .catch(() => setSystemStatus(null));
   }, []);
 
   return (
-    <header className="bg-gray-900 border-b border-gray-800">
+    <header className="bg-gray-950 border-b border-gray-800/90 sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-3">
-          <div className="bg-cyan-500/10 p-2 rounded-lg">
-            <Shield className="w-6 h-6 text-cyan-400" />
+        <Link to="/" className="flex items-center gap-3 group">
+          {/* Snapdragon Silicon Hexagon Brand Icon */}
+          <div className="p-2 rounded-xl bg-gradient-to-br from-[#CE0F3D]/20 to-red-950/40 border border-[#CE0F3D]/40 group-hover:border-[#CE0F3D] transition-all shadow-md shadow-red-950/30">
+            <SnapdragonHexagonIcon className="w-6 h-6" color="#CE0F3D" />
           </div>
-          <span className="text-xl font-bold text-white tracking-tight">Cyber Shield</span>
-          {/* NPU / CPU Status Badge */}
+          
+          <div className="flex items-baseline gap-2">
+            <span className="text-xl font-extrabold text-white tracking-tight">Cyber Shield</span>
+            <span className="hidden sm:inline-block text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded bg-[#CE0F3D]/15 text-rose-300 border border-[#CE0F3D]/30 font-mono">
+              Snapdragon® X
+            </span>
+          </div>
+
+          {/* Snapdragon NPU Status Badge */}
           {systemStatus && (
-            <span className={`ml-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${
+            <span className={`ml-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all ${
               systemStatus.npu_available
-                ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                : 'bg-[#CE0F3D]/10 text-rose-200 border border-[#CE0F3D]/30'
             }`}>
-              {systemStatus.npu_available ? (
-                <><Zap className="w-3 h-3 text-green-400" /> NPU: Active</>
-              ) : (
-                <><Cpu className="w-3 h-3 text-blue-400" /> NPU: Not available (CPU fallback)</>
-              )}
+              <SnapdragonHexagonIcon className="w-3.5 h-3.5 shrink-0" color={systemStatus.npu_available ? "#10b981" : "#CE0F3D"} />
+              <span className="font-mono">
+                {systemStatus.npu_available ? 'NPU: Active (Hexagon HTP)' : 'NPU: Ready (CPU Fallback)'}
+              </span>
             </span>
           )}
         </Link>
-        <nav className="flex gap-6">
+
+        {/* Navigation Tabs */}
+        <nav className="flex items-center gap-1 sm:gap-2">
           <Link
             to="/"
-            className={`text-sm font-medium transition-colors ${
-              location.pathname === '/' ? 'text-cyan-400' : 'text-gray-400 hover:text-white'
+            className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+              location.pathname === '/' 
+                ? 'text-white bg-[#CE0F3D] shadow-sm shadow-red-900/30' 
+                : 'text-gray-400 hover:text-white hover:bg-gray-900'
             }`}
           >
             Scanner
           </Link>
           <Link
             to="/performance"
-            className={`text-sm font-medium transition-colors ${
-              location.pathname === '/performance' ? 'text-cyan-400' : 'text-gray-400 hover:text-white'
+            className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+              location.pathname === '/performance' 
+                ? 'text-white bg-[#CE0F3D] shadow-sm shadow-red-900/30' 
+                : 'text-gray-400 hover:text-white hover:bg-gray-900'
             }`}
           >
             Performance & NPU
           </Link>
           <Link
             to="/history"
-            className={`text-sm font-medium transition-colors ${
-              location.pathname === '/history' ? 'text-cyan-400' : 'text-gray-400 hover:text-white'
+            className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+              location.pathname === '/history' 
+                ? 'text-white bg-[#CE0F3D] shadow-sm shadow-red-900/30' 
+                : 'text-gray-400 hover:text-white hover:bg-gray-900'
             }`}
           >
             History

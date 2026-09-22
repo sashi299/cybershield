@@ -483,10 +483,12 @@ def get_history():
                 "verdict": row_dict.get("verdict", "Safe"),
                 "confidence": row_dict.get("confidence", 0.0),
                 "redFlags": red_flags_list,
+                "red_flags": red_flags_str,
                 "explanation": row_dict.get("explanation", ""),
                 "recommendation": row_dict.get("recommendation", ""),
                 "tips": tips_list,
                 "target": row_dict.get("input_value", ""),
+                "input_value": row_dict.get("input_value", ""),
                 "input_type": row_dict.get("input_type", ""),
                 "timestamp": row_dict.get("timestamp", ""),
             })

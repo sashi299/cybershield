@@ -8,7 +8,7 @@ import Performance from './pages/Performance';
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-950 text-white flex flex-col selection:bg-cyan-500 selection:text-black">
+      <div className="min-h-screen bg-gray-950 text-white flex flex-col selection:bg-[#CE0F3D] selection:text-white">
         <Header />
         <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
           <Routes>

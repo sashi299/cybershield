@@ -43,14 +43,14 @@ export default function ResultCard({ result }) {
       {/* Model & Rule Explainability Inspector */}
       <div className="bg-gray-950/80 rounded-xl p-4 border border-gray-800 space-y-3">
         <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-          <Info className="w-4 h-4 text-cyan-400" />
+          <Info className="w-4 h-4 text-rose-400" />
           Explainability & Defense Attribution Breakdown
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
           <div className="p-3 bg-gray-900 rounded-lg border border-gray-800">
             <div className="flex justify-between items-center mb-1">
               <span className="text-gray-300 font-semibold">1. Heuristic Rule Engine</span>
-              <span className="text-cyan-400 font-mono">70% Weight</span>
+              <span className="text-rose-400 font-mono font-bold">70% Weight</span>
             </div>
             <p className="text-gray-400 text-[11px]">
               {result.redFlags && result.redFlags.length > 0
@@ -62,7 +62,7 @@ export default function ResultCard({ result }) {
           <div className="p-3 bg-gray-900 rounded-lg border border-gray-800">
             <div className="flex justify-between items-center mb-1">
               <span className="text-gray-300 font-semibold">2. On-Device DistilBERT NLP</span>
-              <span className="text-purple-400 font-mono">30% Weight</span>
+              <span className="text-purple-400 font-mono font-bold">30% Weight</span>
             </div>
             <p className="text-gray-400 text-[11px]">
               Analyzed semantic threat intent via Qualcomm AI Hub transformer model running on-device.
@@ -76,7 +76,7 @@ export default function ResultCard({ result }) {
         <div className="bg-gray-800/80 rounded-lg p-4 border border-gray-700">
           <div className="flex items-center justify-between mb-2">
             <h4 className="text-sm font-semibold text-white flex items-center gap-2">
-              <span className="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+              <span className="inline-block w-2 h-2 rounded-full bg-rose-400 animate-pulse"></span>
               On-Device Vision Scan (MobileNet-v2)
             </h4>
             <span className="text-xs text-gray-400 font-mono">
@@ -104,10 +104,10 @@ export default function ResultCard({ result }) {
       {result.explanation && (
         <div>
           <h3 className="text-lg font-semibold text-white flex items-center gap-2 mb-3">
-            <Info className="w-5 h-5 text-cyan-400" />
+            <Info className="w-5 h-5 text-rose-400" />
             Analysis Explanation
           </h3>
-          <div className="bg-gray-800 p-4 rounded-lg">
+          <div className="bg-gray-800 p-4 rounded-lg border border-gray-700/60">
             <p className="text-gray-300 text-sm leading-relaxed">{result.explanation}</p>
           </div>
         </div>
@@ -117,8 +117,14 @@ export default function ResultCard({ result }) {
       {result.recommendation && (
         <div>
           <h3 className="text-lg font-semibold text-white mb-3">Recommendation</h3>
-          <div className="bg-cyan-500/10 border border-cyan-500/20 p-4 rounded-lg">
-            <p className="text-cyan-100 text-sm font-medium">{result.recommendation}</p>
+          <div className={`p-4 rounded-lg border ${
+            result.verdict?.toLowerCase() === 'safe'
+              ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-100'
+              : result.verdict?.toLowerCase() === 'suspicious'
+              ? 'bg-amber-500/10 border-amber-500/20 text-amber-100'
+              : 'bg-[#CE0F3D]/10 border-[#CE0F3D]/30 text-rose-100'
+          }`}>
+            <p className="text-sm font-medium">{result.recommendation}</p>
           </div>
         </div>
       )}

@@ -28,11 +28,18 @@ def explain_rules(triggered_rules: list, input_type: str = "url", input_text: st
     explanations = []
     
     # Specific attack pattern detections
-    is_electricity = any(k in text_lower for k in ["electricity", "power", "bill", "disconnected", "officer"])
+    is_digital_arrest = (
+        any(r.get("rule_id") == "digital_arrest_scam" for r in triggered_rules)
+        or any(k in text_lower for k in [
+            "digital arrest", "arrest warrant", "cbi officer", "cbi", "cyber crime branch",
+            "money laundering", "enforcement directorate", "safe verification account", "aadhaar"
+        ])
+    )
+    is_electricity = any(k in text_lower for k in ["electricity", "power bill", "light bill", "power supply", "electric bill", "power disconnection"])
     is_job_scam = any(k in text_lower for k in ["part time", "earn daily", "telegram", "like video", "subscribe", "work from home", "salary"])
     is_tax_scam = any(k in text_lower for k in ["income tax", "refund", "it dept", "it department", "tax refund"])
-    is_sim_scam = any(k in text_lower for k in ["sim", "esim", "5g upgrade", "kyc expired", "sim block"])
-    is_delivery_scam = any(k in text_lower for k in ["customs", "delivery fee", "address update", "package hold", "parcel stuck"])
+    is_sim_scam = any(k in text_lower for k in ["sim card", "esim", "5g upgrade", "kyc expired", "sim block"])
+    is_delivery_scam = any(k in text_lower for k in ["customs duty", "delivery fee", "address update", "package hold", "parcel stuck"])
     
     # Heuristic category flags
     has_banking = any("bank" in r.get("description", "").lower() or "financial" in r.get("description", "").lower() or r.get("rule_id") == "financial_request" for r in triggered_rules)
@@ -44,8 +51,23 @@ def explain_rules(triggered_rules: list, input_type: str = "url", input_text: st
     has_shortener = any(r.get("rule_id") == "url_shortener" for r in triggered_rules)
     has_threat = any(r.get("rule_id") == "threat_language" for r in triggered_rules)
 
-    # Lead summary based on the primary attack vector
-    if is_electricity:
+    is_password_expiry = (
+        any(k in text_lower for k in ["expire", "expiration", "credential", "password", "service interruption", "corporate email", "verify your account"])
+        and (has_credentials or has_urgency or "login" in text_lower or "portal" in text_lower)
+    )
+    is_bank_phishing = (
+        (has_banking or any(k in text_lower for k in ["sbi", "netbanking", "bank", "kyc", "hdfc", "icici", "axis"]))
+        and (has_typosquatting or has_credentials or has_urgency or input_type == "url")
+    )
+
+    # Lead summary based on the primary attack vector (highest threat specificity first)
+    if is_digital_arrest:
+        explanations.append("[Digital Arrest & Law Enforcement Extortion Scam] Fraudsters impersonate police, CBI, or cyber crime branch officers using fabricated arrest warrants and threats of imminent 'digital arrest' to intimidate victims into transferring money to bogus 'safe verification accounts'.")
+    elif is_password_expiry:
+        explanations.append("[Corporate Password & Credential Phishing] Attackers use fabricated urgency regarding expiring corporate email or single sign-on credentials to panic employees into clicking deceptive links that harvest enterprise login credentials.")
+    elif is_bank_phishing:
+        explanations.append("[Deceptive Banking Phishing Link] Malicious website attempting to imitate legitimate net-banking portals (such as SBI) to steal login IDs, net-banking credentials, and transaction OTPs.")
+    elif is_electricity:
         explanations.append("[Utility / Electricity Disconnection Scam] Fraudsters use false threats of imminent power disconnection to coerce victims into calling fake officer numbers or downloading remote access APKs.")
     elif is_job_scam:
         explanations.append("[Task / Part-Time Job Scam] Lures victims with promises of easy daily earnings (e.g. liking videos, rating apps) leading into fraudulent crypto or prepaid recharge tasks.")
@@ -117,7 +139,21 @@ def generate_recommendations(verdict: str, threat_type: str = "general", input_t
             ]
             
     else:  # Dangerous
-        if any(k in text_lower for k in ["electricity", "power", "bill", "disconnected"]):
+        if any(k in text_lower for k in ["digital arrest", "arrest warrant", "cbi", "cyber crime branch", "money laundering", "enforcement directorate", "safe verification account", "aadhaar"]):
+            recommendation = "Severe Digital Arrest / Law Enforcement Extortion Detected! Cut all contact immediately."
+            tips = [
+                "There is NO legal concept of 'Digital Arrest' under Indian law. Police or CBI NEVER arrest or interrogate citizens over video calls.",
+                "Government agencies and cyber police NEVER demand fund transfers to 'RBI verification accounts' or 'safe escrow accounts'.",
+                "Immediately hang up and report this extortion call to the National Cyber Crime Helpline (1930) or cybercrime.gov.in."
+            ]
+        elif any(k in text_lower for k in ["expire in", "credentials expire", "password expire", "verify your account immediately", "service interruption", "corporate email"]):
+            recommendation = "Corporate Credential Phishing Warning! Do not enter your login credentials."
+            tips = [
+                "Legitimate IT administrators NEVER ask you to re-verify passwords via unverified email links.",
+                "Always navigate directly to your organization's official Single Sign-On (SSO) portal in a new browser tab.",
+                "Forward this suspicious email to your company's Information Security (InfoSec) team or IT Helpdesk immediately."
+            ]
+        elif any(k in text_lower for k in ["electricity", "power bill", "light bill", "power supply", "electric bill", "power disconnection"]):
             recommendation = "Electricity Bill Fraud Detected! Do not contact the provided phone number."
             tips = [
                 "Electricity boards NEVER send personal mobile numbers for bill payments or disconnections.",
@@ -131,7 +167,7 @@ def generate_recommendations(verdict: str, threat_type: str = "general", input_t
                 "Never pay any 'registration fee' or 'security deposit' to unlock work tasks.",
                 "Block and report the sender's number on WhatsApp / Telegram immediately."
             ]
-        elif any(k in text_lower for k in ["bank", "sbi", "hdfc", "icici", "axis", "account", "pan", "kyc", "debit", "credit"]):
+        elif any(k in text_lower for k in ["bank", "sbi", "hdfc", "icici", "axis", "account", "pan", "kyc", "debit", "credit", "netbanking"]):
             recommendation = "High-Risk Banking Scam Detected! Immediate protective action required."
             tips = [
                 "Do NOT click any link or call the phone number provided in this message.",

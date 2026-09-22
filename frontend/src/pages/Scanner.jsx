@@ -102,13 +102,13 @@ export default function Scanner() {
       <div className="bg-gradient-to-r from-gray-900 via-gray-900 to-gray-950 border border-gray-800 rounded-xl p-4 shadow-xl">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400">
+            <div className="p-2 rounded-lg bg-[#CE0F3D]/10 text-rose-400 border border-[#CE0F3D]/20">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <span className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
                 Challenge Judge Demo Mode
-                <span className="text-[10px] font-mono bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded-full border border-cyan-500/30">
+                <span className="text-[10px] font-mono bg-[#CE0F3D]/20 text-rose-300 px-2 py-0.5 rounded-full border border-[#CE0F3D]/30">
                   1-Click Presets
                 </span>
               </span>
@@ -139,7 +139,7 @@ export default function Scanner() {
         <div className={`lg:col-span-3 bg-gray-900 border border-gray-800 rounded-xl p-4 shadow-xl space-y-4`}>
           <div className="flex items-center justify-between border-b border-gray-800 pb-3">
             <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Clock className="w-4 h-4 text-cyan-400" />
+              <Clock className="w-4 h-4 text-rose-400" />
               Recent Scan Log
             </h3>
             <button
@@ -180,8 +180,8 @@ export default function Scanner() {
                         {item.confidence?.toFixed(0)}%
                       </span>
                     </div>
-                    <p className="text-xs text-gray-300 font-mono truncate group-hover:text-cyan-400 transition-colors">
-                      {item.target || 'Message content'}
+                    <p className="text-xs text-gray-300 font-mono truncate group-hover:text-rose-400 transition-colors">
+                      {item.target || item.input_value || 'Message content'}
                     </p>
                   </div>
                 );

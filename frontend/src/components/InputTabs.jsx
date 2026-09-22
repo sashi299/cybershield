@@ -159,9 +159,9 @@ export default function InputTabs({ onAnalyze, onClear, presetInput }) {
               key={tab.id}
               onClick={() => handleTabChange(tab.id)}
               className={`flex-1 flex items-center justify-center gap-2 py-4 px-3 text-sm font-medium transition-all
-                ${isActive ? 'bg-gray-900 text-cyan-400 border-b-2 border-cyan-400 shadow-sm' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-900/50'}`}
+                ${isActive ? 'bg-gray-900 text-white border-b-2 border-[#CE0F3D] font-bold shadow-sm' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-900/50'}`}
             >
-              <Icon className="w-4 h-4 shrink-0" />
+              <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#CE0F3D]' : ''}`} />
               <span>{tab.label}</span>
             </button>
           );
@@ -178,7 +178,7 @@ export default function InputTabs({ onAnalyze, onClear, presetInput }) {
               <button
                 type="button"
                 onClick={handlePasteFromClipboard}
-                className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 font-medium px-2 py-1 rounded bg-cyan-500/10 hover:bg-cyan-500/20 transition-colors"
+                className="flex items-center gap-1.5 text-xs text-rose-400 hover:text-rose-300 font-medium px-2.5 py-1 rounded bg-[#CE0F3D]/10 hover:bg-[#CE0F3D]/20 border border-[#CE0F3D]/20 transition-colors"
                 title="Paste from system clipboard"
               >
                 <Clipboard className="w-3.5 h-3.5" />
@@ -192,7 +192,7 @@ export default function InputTabs({ onAnalyze, onClear, presetInput }) {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder={TABS.find((t) => t.id === activeTab).placeholder}
-                className="w-full bg-gray-950 border border-gray-700/80 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all font-mono text-sm"
+                className="w-full bg-gray-950 border border-gray-700/80 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#CE0F3D] focus:border-transparent transition-all font-mono text-sm"
               />
             ) : (
               <textarea
@@ -200,7 +200,7 @@ export default function InputTabs({ onAnalyze, onClear, presetInput }) {
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder={TABS.find((t) => t.id === activeTab).placeholder}
                 rows={6}
-                className="w-full bg-gray-950 border border-gray-700/80 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all resize-none text-sm leading-relaxed"
+                className="w-full bg-gray-950 border border-gray-700/80 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#CE0F3D] focus:border-transparent transition-all resize-none text-sm leading-relaxed"
               />
             )}
           </div>
@@ -213,8 +213,8 @@ export default function InputTabs({ onAnalyze, onClear, presetInput }) {
             onDrop={handleDrop}
             className={`w-full bg-gray-950 border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-all ${
               isDragging
-                ? 'border-cyan-400 bg-cyan-950/20 scale-[1.01]'
-                : 'border-gray-700 hover:border-cyan-500/80 hover:bg-gray-900/60'
+                ? 'border-[#CE0F3D] bg-red-950/20 scale-[1.01]'
+                : 'border-gray-700 hover:border-[#CE0F3D]/60 hover:bg-gray-900/60'
             }`}
           >
             {filePreview ? (
@@ -238,7 +238,7 @@ export default function InputTabs({ onAnalyze, onClear, presetInput }) {
               </div>
             ) : (
               <div className="text-center space-y-2">
-                <div className="w-12 h-12 rounded-full bg-cyan-500/10 text-cyan-400 flex items-center justify-center mx-auto mb-3">
+                <div className="w-12 h-12 rounded-full bg-[#CE0F3D]/10 text-rose-400 flex items-center justify-center mx-auto mb-3 border border-[#CE0F3D]/20">
                   <Upload className="w-6 h-6" />
                 </div>
                 <p className="text-white font-semibold text-base">
@@ -248,8 +248,8 @@ export default function InputTabs({ onAnalyze, onClear, presetInput }) {
                   Or click to browse from PC • Supports PNG, JPG, WEBP
                 </p>
                 <div className="pt-2">
-                  <span className="inline-flex items-center gap-1.5 text-xs text-cyan-400 bg-gray-900 border border-gray-800 px-3 py-1 rounded-full">
-                    <ImageIcon className="w-3 h-3" /> Tip: Press <kbd className="bg-gray-800 px-1.5 py-0.5 rounded text-[10px] text-gray-300">Ctrl+V</kbd> to paste screenshot directly
+                  <span className="inline-flex items-center gap-1.5 text-xs text-rose-300 bg-gray-900 border border-gray-800 px-3 py-1 rounded-full">
+                    <ImageIcon className="w-3 h-3 text-rose-400" /> Tip: Press <kbd className="bg-gray-800 px-1.5 py-0.5 rounded text-[10px] text-gray-300">Ctrl+V</kbd> to paste screenshot directly
                   </span>
                 </div>
               </div>
@@ -282,7 +282,7 @@ export default function InputTabs({ onAnalyze, onClear, presetInput }) {
           <button
             type="submit"
             disabled={loading || (activeTab !== 'qr' ? !inputValue.trim() : !file)}
-            className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium py-3 px-8 rounded-lg flex items-center gap-2.5 transition-all shadow-lg shadow-cyan-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-gradient-to-r from-[#CE0F3D] to-[#990A2C] hover:from-[#E6002A] hover:to-[#B30C34] text-white font-medium py-3 px-8 rounded-lg flex items-center gap-2.5 transition-all shadow-lg shadow-red-950/40 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
             {loading ? 'Evaluating On-Device...' : `Scan with AI Guard`}
