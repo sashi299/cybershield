@@ -4,7 +4,7 @@ import re
 from typing import Optional
 
 from .rule_engine import analyze_url_rules, analyze_text_rules
-from .ml_model import predict
+from .ml_model import predict, get_last_inference_ms
 from .qr_decoder import decode_qr
 from .verdict import calculate_verdict
 from .explainer import explain_rules, generate_recommendations
@@ -408,6 +408,27 @@ def analyze_qr(file: UploadFile = File(...)):
         explanation = explain_rules(rule_results["triggered_rules"], input_type="text", input_text=cleaned)
         recommendation, tips = generate_recommendations(verdict_data["verdict"], "general", input_text=cleaned)
     
+    # Run on-device MobileNet-v2 visual analysis on the image
+    visual_analysis = None
+    try:
+        from .vision_classifier import classify_screenshot, is_available as is_vision_available
+        if is_vision_available():
+            v_res, v_ms = classify_screenshot(contents)
+            visual_analysis = {
+                "detected_class": v_res["class"],
+                "confidence": v_res["confidence"],
+                "all_scores": v_res.get("all_scores", {}),
+                "inference_ms": round(v_ms, 2)
+            }
+            if v_res["class"] in ["fake_login_page", "fake_bank_ui", "scam_qr_landing"] and v_res["confidence"] > 0.4:
+                rule_results["triggered_rules"].append({
+                    "rule_id": f"visual_{v_res['class']}",
+                    "description": f"Visual Scam Detector (MobileNet-v2): Classified as {v_res['class'].replace('_', ' ').title()} ({v_res['confidence']*100:.1f}% confidence)",
+                    "severity": "high"
+                })
+    except Exception:
+        pass
+
     red_flags = ", ".join([r["rule_id"] for r in rule_results["triggered_rules"]])
     
     with get_db_connection() as conn:
@@ -427,7 +448,8 @@ def analyze_qr(file: UploadFile = File(...)):
         "redFlags": rule_results["triggered_rules"],
         "explanation": explanation,
         "recommendation": recommendation,
-        "tips": [t.strip().lstrip("- ") for t in tips.split("\n") if t.strip()]
+        "tips": [t.strip().lstrip("- ") for t in tips.split("\n") if t.strip()],
+        "visual_analysis": visual_analysis
     }
 
 @router.get("/api/history")
@@ -475,3 +497,39 @@ def report_scan(req: ReportRequest):
         cursor.execute('INSERT INTO reports (scan_id, user_comment) VALUES (?, ?)', (req.scan_id, req.comment))
         conn.commit()
     return {"success": True}
+
+
+# ─── Snapdragon NPU / System Status Endpoints ────────────────────────
+
+@router.get("/api/system/status")
+def system_status():
+    """
+    Returns system information including NPU availability and model status.
+    Used by the frontend to show the NPU/CPU badge indicator.
+    """
+    try:
+        from .npu_config import get_system_status
+        return get_system_status()
+    except ImportError:
+        return {
+            "npu_available": False,
+            "execution_provider": "CPU (npu_config not available)",
+            "models_loaded": {},
+        }
+
+
+@router.get("/api/benchmark")
+def run_benchmark():
+    """
+    Run inference benchmarks for text and vision models.
+    Measures latency across NPU vs CPU execution providers.
+    Returns avg/min/max/p50/p95 latency in milliseconds.
+    """
+    try:
+        from .benchmark import run_full_benchmark
+        results = run_full_benchmark(n_runs=50)
+        return results
+    except ImportError:
+        return {"error": "Benchmark module not available"}
+    except Exception as e:
+        return {"error": f"Benchmark failed: {str(e)}"}

@@ -3,15 +3,37 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
+import logging
+
 from .database import init_db
 from .ml_model import load_model
 from .routes import router
 from .rate_limiter import RateLimitMiddleware
 
+# Configure logging for NPU modules
+logging.basicConfig(level=logging.INFO)
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
     load_model()
+    
+    # Initialize NPU config and vision classifier (non-blocking)
+    try:
+        from .npu_config import get_system_status
+        status = get_system_status()
+        print(f"[NPU] Execution Provider: {status['execution_provider']}")
+        print(f"[NPU] NPU Available: {status['npu_available']}")
+        print(f"[NPU] Models: {status['models_loaded']}")
+    except Exception as e:
+        print(f"[NPU] Config init skipped: {e}")
+    
+    try:
+        from .vision_classifier import load_model as load_vision
+        load_vision()
+    except Exception as e:
+        print(f"[Vision] Model init skipped: {e}")
+    
     yield
 
 app = FastAPI(title="Cyber Shield API", lifespan=lifespan)

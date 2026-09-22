@@ -1,8 +1,18 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Shield } from 'lucide-react';
+import { Shield, Cpu, Zap } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 export default function Header() {
   const location = useLocation();
+  const [systemStatus, setSystemStatus] = useState(null);
+
+  useEffect(() => {
+    // Fetch NPU/system status for the badge indicator
+    fetch('/api/system/status')
+      .then(res => res.json())
+      .then(data => setSystemStatus(data))
+      .catch(() => setSystemStatus(null));
+  }, []);
 
   return (
     <header className="bg-gray-900 border-b border-gray-800">
@@ -12,6 +22,20 @@ export default function Header() {
             <Shield className="w-6 h-6 text-cyan-400" />
           </div>
           <span className="text-xl font-bold text-white tracking-tight">Cyber Shield</span>
+          {/* NPU / CPU Status Badge */}
+          {systemStatus && (
+            <span className={`ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
+              systemStatus.npu_available
+                ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+            }`}>
+              {systemStatus.npu_available ? (
+                <><Zap className="w-3 h-3" /> NPU</>
+              ) : (
+                <><Cpu className="w-3 h-3" /> CPU</>
+              )}
+            </span>
+          )}
         </Link>
         <nav className="flex gap-6">
           <Link

@@ -40,6 +40,35 @@ export default function ResultCard({ result }) {
         </div>
       )}
 
+      {/* Visual Scam Detection (MobileNet-v2 On-Device) */}
+      {result.visual_analysis && (
+        <div className="bg-gray-800/80 rounded-lg p-4 border border-gray-700">
+          <div className="flex items-center justify-between mb-2">
+            <h4 className="text-sm font-semibold text-white flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+              On-Device Vision Scan (MobileNet-v2)
+            </h4>
+            <span className="text-xs text-gray-400 font-mono">
+              {result.visual_analysis.inference_ms}ms
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-300">Visual Pattern:</span>
+            <span className={`font-medium capitalize ${
+              result.visual_analysis.detected_class === 'safe_content' ? 'text-green-400' : 'text-yellow-400'
+            }`}>
+              {result.visual_analysis.detected_class.replace(/_/g, ' ')}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-sm mt-1">
+            <span className="text-gray-400 text-xs">Model Confidence:</span>
+            <span className="text-gray-300 text-xs font-mono">
+              {(result.visual_analysis.confidence * 100).toFixed(1)}%
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Analysis Explanation */}
       {result.explanation && (
         <div>
