@@ -33,9 +33,9 @@ export default function Header() {
             <SnapdragonHexagonIcon className="w-6 h-6" color="#CE0F3D" />
           </div>
           
-          <div className="flex items-baseline gap-2">
-            <span className="text-xl font-extrabold text-white tracking-tight">Cyber Shield</span>
-            <span className="hidden sm:inline-block text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded bg-[#CE0F3D]/15 text-rose-300 border border-[#CE0F3D]/30 font-mono">
+          <div className="flex items-center gap-2.5 shrink-0">
+            <span className="text-xl font-extrabold text-white tracking-tight shrink-0">Cyber Shield</span>
+            <span className="hidden sm:inline-flex items-center whitespace-nowrap shrink-0 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#CE0F3D]/20 text-rose-200 border border-[#CE0F3D]/40 leading-normal select-none">
               Snapdragon® X
             </span>
           </div>
