@@ -1,40 +1,131 @@
-import { useState, useRef } from 'react';
-import { Link2, Mail, MessageSquare, QrCode, Loader2, Upload } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Link2, Mail, MessageSquare, QrCode, Loader2, Upload, Clipboard, Image as ImageIcon, X } from 'lucide-react';
 import { analyzeUrl, analyzeText, analyzeQr } from '../api';
 
 const TABS = [
-  { id: 'url', label: 'URL', icon: Link2, placeholder: 'Enter a suspicious link (e.g., https://example.com)' },
-  { id: 'email', label: 'Email', icon: Mail, placeholder: 'Paste email content here...' },
-  { id: 'sms', label: 'SMS', icon: MessageSquare, placeholder: 'Paste text message here...' },
-  { id: 'qr', label: 'QR Code', icon: QrCode, placeholder: 'Upload a QR code image' },
+  { id: 'url', label: 'URL / Link', icon: Link2, placeholder: 'Enter suspicious website link (e.g. http://paypal-security.xyz/login)...' },
+  { id: 'sms', label: 'SMS & Messages', icon: MessageSquare, placeholder: 'Paste suspicious SMS, WhatsApp message, or digital arrest script...' },
+  { id: 'email', label: 'Email Phishing', icon: Mail, placeholder: 'Paste email body with suspicious headers or urgency requests...' },
+  { id: 'qr', label: 'QR & Screenshots', icon: QrCode, placeholder: 'Drop a QR code image or screenshot here...' },
 ];
 
-export default function InputTabs({ onAnalyze, onClear }) {
+export default function InputTabs({ onAnalyze, onClear, presetInput }) {
   const [activeTab, setActiveTab] = useState('url');
   const [inputValue, setInputValue] = useState('');
   const [file, setFile] = useState(null);
+  const [filePreview, setFilePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Handle demo mode preset input injection from parent
+  useEffect(() => {
+    if (presetInput) {
+      if (presetInput.tab) setActiveTab(presetInput.tab);
+      if (presetInput.value) setInputValue(presetInput.value);
+      if (presetInput.file) {
+        setFile(presetInput.file);
+        setFilePreview(URL.createObjectURL(presetInput.file));
+      }
+    }
+  }, [presetInput]);
+
+  // Handle global paste event (Ctrl+V) for images and text
+  useEffect(() => {
+    const handlePaste = (e) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          const blob = items[i].getAsFile();
+          if (blob) {
+            setActiveTab('qr');
+            setFile(blob);
+            setFilePreview(URL.createObjectURL(blob));
+            setError('');
+          }
+          break;
+        }
+      }
+    };
+
+    window.addEventListener('paste', handlePaste);
+    return () => window.removeEventListener('paste', handlePaste);
+  }, []);
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
     setInputValue('');
     setFile(null);
+    setFilePreview(null);
     setError('');
     if (onClear) onClear();
+  };
+
+  const handleFileChange = (selectedFile) => {
+    if (selectedFile) {
+      setFile(selectedFile);
+      setFilePreview(URL.createObjectURL(selectedFile));
+      setError('');
+    }
+  };
+
+  const handleClearFile = (e) => {
+    e.stopPropagation();
+    setFile(null);
+    setFilePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const dropped = e.dataTransfer.files[0];
+      if (dropped.type.startsWith('image/')) {
+        setActiveTab('qr');
+        handleFileChange(dropped);
+      } else {
+        setError('Please drop an image file (PNG, JPG, JPEG, WEBP).');
+      }
+    }
+  };
+
+  const handlePasteFromClipboard = async () => {
+    try {
+      if (window.desktopAPI?.readClipboardText) {
+        const text = window.desktopAPI.readClipboardText();
+        if (text) setInputValue(text);
+      } else if (navigator.clipboard?.readText) {
+        const text = await navigator.clipboard.readText();
+        if (text) setInputValue(text);
+      }
+    } catch (e) {
+      console.error('Clipboard read failed:', e);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     if (activeTab !== 'qr' && !inputValue.trim()) {
-      setError('Please enter some content to analyze.');
+      setError('Please enter or paste some content to scan.');
       return;
     }
     if (activeTab === 'qr' && !file) {
-      setError('Please upload a QR code image.');
+      setError('Please upload, drop, or paste a QR code or screenshot.');
       return;
     }
 
@@ -42,23 +133,24 @@ export default function InputTabs({ onAnalyze, onClear }) {
     try {
       let result;
       if (activeTab === 'url') {
-        result = await analyzeUrl(inputValue);
+        result = await analyzeUrl(inputValue.trim());
       } else if (activeTab === 'email' || activeTab === 'sms') {
-        result = await analyzeText(inputValue, activeTab);
+        result = await analyzeText(inputValue.trim(), activeTab);
       } else if (activeTab === 'qr') {
         result = await analyzeQr(file);
       }
       if (onAnalyze) onAnalyze(result);
     } catch (err) {
-      setError(err.response?.data?.detail || err.message || 'An error occurred during analysis.');
+      setError(err.response?.data?.detail || err.message || 'An error occurred during threat analysis.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="bg-gray-900 rounded-xl shadow-lg border border-gray-800 overflow-hidden">
-      <div className="flex border-b border-gray-800">
+    <div className="bg-gray-900 rounded-xl shadow-2xl border border-gray-800 overflow-hidden backdrop-blur-sm">
+      {/* Tab Navigation */}
+      <div className="flex border-b border-gray-800 bg-gray-950/60">
         {TABS.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -66,73 +158,134 @@ export default function InputTabs({ onAnalyze, onClear }) {
             <button
               key={tab.id}
               onClick={() => handleTabChange(tab.id)}
-              className={`flex-1 flex items-center justify-center gap-2 py-4 px-2 text-sm font-medium transition-all
-                ${isActive ? 'bg-gray-800 text-cyan-400 border-b-2 border-cyan-400' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'}`}
+              className={`flex-1 flex items-center justify-center gap-2 py-4 px-3 text-sm font-medium transition-all
+                ${isActive ? 'bg-gray-900 text-cyan-400 border-b-2 border-cyan-400 shadow-sm' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-900/50'}`}
             >
-              <Icon className="w-4 h-4" />
-              {tab.label}
+              <Icon className="w-4 h-4 shrink-0" />
+              <span>{tab.label}</span>
             </button>
           );
         })}
       </div>
 
-      <form onSubmit={handleSubmit} className="p-6">
+      <form onSubmit={handleSubmit} className="p-6 space-y-4">
         {activeTab !== 'qr' ? (
-          activeTab === 'url' ? (
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder={TABS.find(t => t.id === activeTab).placeholder}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
-            />
-          ) : (
-            <textarea
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder={TABS.find(t => t.id === activeTab).placeholder}
-              rows={6}
-              className="w-full bg-gray-950 border border-gray-700 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all resize-none"
-            />
-          )
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                {activeTab === 'url' ? 'Target Web Address' : 'Message Contents for NPU Analysis'}
+              </label>
+              <button
+                type="button"
+                onClick={handlePasteFromClipboard}
+                className="flex items-center gap-1.5 text-xs text-cyan-400 hover:text-cyan-300 font-medium px-2 py-1 rounded bg-cyan-500/10 hover:bg-cyan-500/20 transition-colors"
+                title="Paste from system clipboard"
+              >
+                <Clipboard className="w-3.5 h-3.5" />
+                Paste Clipboard
+              </button>
+            </div>
+
+            {activeTab === 'url' ? (
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder={TABS.find((t) => t.id === activeTab).placeholder}
+                className="w-full bg-gray-950 border border-gray-700/80 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all font-mono text-sm"
+              />
+            ) : (
+              <textarea
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder={TABS.find((t) => t.id === activeTab).placeholder}
+                rows={6}
+                className="w-full bg-gray-950 border border-gray-700/80 rounded-lg p-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all resize-none text-sm leading-relaxed"
+              />
+            )}
+          </div>
         ) : (
-          <div 
+          /* Drag & Drop File Upload Stage */
+          <div
             onClick={() => fileInputRef.current?.click()}
-            className="w-full bg-gray-950 border-2 border-dashed border-gray-700 rounded-lg p-8 flex flex-col items-center justify-center cursor-pointer hover:border-cyan-500 hover:bg-gray-900/50 transition-all"
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`w-full bg-gray-950 border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-all ${
+              isDragging
+                ? 'border-cyan-400 bg-cyan-950/20 scale-[1.01]'
+                : 'border-gray-700 hover:border-cyan-500/80 hover:bg-gray-900/60'
+            }`}
           >
-            <Upload className="w-8 h-8 text-gray-500 mb-3" />
-            <p className="text-gray-300 font-medium">Click to upload QR code</p>
-            <p className="text-gray-500 text-sm mt-1">Supports PNG, JPG, JPEG</p>
-            {file && (
-              <div className="mt-4 p-2 bg-gray-800 rounded text-cyan-400 text-sm">
-                Selected: {file.name}
+            {filePreview ? (
+              <div className="relative group max-w-xs">
+                <img
+                  src={filePreview}
+                  alt="QR or screenshot preview"
+                  className="max-h-48 rounded-lg shadow-md border border-gray-700 object-contain mx-auto"
+                />
+                <button
+                  type="button"
+                  onClick={handleClearFile}
+                  className="absolute -top-2 -right-2 p-1.5 rounded-full bg-red-600 text-white hover:bg-red-500 transition-colors shadow-lg"
+                  title="Remove image"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+                <p className="text-center text-xs text-gray-400 mt-2 truncate max-w-xs">
+                  {file?.name || 'Pasted image from clipboard'}
+                </p>
+              </div>
+            ) : (
+              <div className="text-center space-y-2">
+                <div className="w-12 h-12 rounded-full bg-cyan-500/10 text-cyan-400 flex items-center justify-center mx-auto mb-3">
+                  <Upload className="w-6 h-6" />
+                </div>
+                <p className="text-white font-semibold text-base">
+                  Drag & Drop Screenshot or QR Image Here
+                </p>
+                <p className="text-gray-400 text-xs">
+                  Or click to browse from PC • Supports PNG, JPG, WEBP
+                </p>
+                <div className="pt-2">
+                  <span className="inline-flex items-center gap-1.5 text-xs text-cyan-400 bg-gray-900 border border-gray-800 px-3 py-1 rounded-full">
+                    <ImageIcon className="w-3 h-3" /> Tip: Press <kbd className="bg-gray-800 px-1.5 py-0.5 rounded text-[10px] text-gray-300">Ctrl+V</kbd> to paste screenshot directly
+                  </span>
+                </div>
               </div>
             )}
+
             <input
               type="file"
               ref={fileInputRef}
-              onChange={(e) => setFile(e.target.files[0])}
+              onChange={(e) => handleFileChange(e.target.files?.[0])}
               accept="image/*"
               className="hidden"
             />
           </div>
         )}
 
+        {/* Error Alert */}
         {error && (
-          <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg flex items-start gap-2 text-red-300 text-sm">
+          <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg flex items-start gap-2 text-red-300 text-sm">
             <span className="font-bold shrink-0">⚠️ Error:</span>
             <div className="flex-1">{error}</div>
           </div>
         )}
 
-        <div className="mt-6 flex justify-end">
+        {/* Action Button */}
+        <div className="flex items-center justify-between pt-2">
+          <div className="text-xs text-gray-500">
+            {activeTab === 'qr' ? 'Runs PyZbar Decoder + On-Device MobileNet-v2 Vision Classifier' : 'Runs DistilBERT (ONNX INT8) + 15-Rule Heuristic Engine'}
+          </div>
+
           <button
             type="submit"
             disabled={loading || (activeTab !== 'qr' ? !inputValue.trim() : !file)}
-            className="bg-cyan-600 hover:bg-cyan-500 text-white font-medium py-2.5 px-6 rounded-lg flex items-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-medium py-3 px-8 rounded-lg flex items-center gap-2.5 transition-all shadow-lg shadow-cyan-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
-            {loading ? 'Analyzing...' : `Analyze ${TABS.find(t => t.id === activeTab).label}`}
+            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+            {loading ? 'Evaluating On-Device...' : `Scan with AI Guard`}
           </button>
         </div>
       </form>

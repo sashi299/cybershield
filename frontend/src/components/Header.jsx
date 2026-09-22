@@ -47,6 +47,14 @@ export default function Header() {
             Scanner
           </Link>
           <Link
+            to="/performance"
+            className={`text-sm font-medium transition-colors ${
+              location.pathname === '/performance' ? 'text-cyan-400' : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            Performance & NPU
+          </Link>
+          <Link
             to="/history"
             className={`text-sm font-medium transition-colors ${
               location.pathname === '/history' ? 'text-cyan-400' : 'text-gray-400 hover:text-white'

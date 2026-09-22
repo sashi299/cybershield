@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Scanner from './pages/Scanner';
 import History from './pages/History';
+import Performance from './pages/Performance';
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Scanner />} />
             <Route path="/history" element={<History />} />
+            <Route path="/performance" element={<Performance />} />
           </Routes>
         </main>
         <Footer />

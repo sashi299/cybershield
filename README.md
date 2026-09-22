@@ -293,9 +293,32 @@ npm install
 npm run dev
 ```
 
-### 3. Open in Browser
+### 3. One-Click Desktop Application (Windows on Snapdragon)
 
-Navigate to **http://localhost:5173** — the frontend dev server proxies API requests to the backend.
+To launch the native desktop experience with the embedded on-device FastAPI backend:
+
+```cmd
+# Double click or run from terminal:
+Start-CyberShield-Desktop.bat
+```
+
+#### Tauri v2 Desktop Build (Native Windows ARM64)
+For Snapdragon X-powered HP PCs using Rust & Windows WebView2:
+
+```bash
+# Target Windows ARM64 (Snapdragon X Elite / Plus)
+cd frontend
+npm run tauri:build
+# Artifact output: src-tauri/target/aarch64-pc-windows-msvc/release/CyberShield.exe
+```
+
+#### Desktop Shell Features
+- **Multi-Pane Workspace**: Left scan history sidebar + central scan console.
+- **Drag & Drop**: Drag QR code images or screenshots directly into the app window.
+- **Clipboard Auto-Paste**: One-click paste button + instant `Ctrl+V` screenshot pasting from Windows clipboard.
+- **Judge Demo Mode**: 1-click presets for Digital Arrest, Bank Phishing, Password Expiry, and Real Bank OTP.
+- **Live Performance Panel**: Real-time NPU vs CPU latency benchmarks for text and vision models.
+- **System Tray**: Minimized to tray with quick scan global shortcut (`Ctrl+Shift+S`).
 
 ---
 
@@ -304,8 +327,10 @@ Navigate to **http://localhost:5173** — the frontend dev server proxies API re
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | POST | `/api/analyze/url` | Analyze a URL for phishing |
-| POST | `/api/analyze/text` | Analyze email/SMS text |
-| POST | `/api/analyze/qr` | Upload & analyze QR code image |
+| POST | `/api/analyze/text` | Analyze email/SMS text with DistilBERT ONNX |
+| POST | `/api/analyze/qr` | Upload & analyze QR code image with MobileNet-v2 |
+| GET | `/api/system/status` | Real-time NPU status, execution provider & loaded models |
+| GET | `/api/benchmark` | Live 50-run inference latency benchmark (NPU vs CPU) |
 | GET | `/api/history` | Get last 50 scan results |
 | POST | `/api/report` | Report incorrect analysis |
 

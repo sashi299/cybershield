@@ -15,3 +15,5 @@ export const analyzeQr = (file) => {
 };
 export const getHistory = () => api.get('/history').then(res => res.data);
 export const reportThreat = (scanId, comment) => api.post('/report', { scan_id: scanId, comment }).then(res => res.data);
+export const getSystemStatus = () => api.get('/system/status').then(res => res.data);
+export const getBenchmark = () => api.get('/benchmark').then(res => res.data);

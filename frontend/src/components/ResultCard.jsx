@@ -40,6 +40,37 @@ export default function ResultCard({ result }) {
         </div>
       )}
 
+      {/* Model & Rule Explainability Inspector */}
+      <div className="bg-gray-950/80 rounded-xl p-4 border border-gray-800 space-y-3">
+        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+          <Info className="w-4 h-4 text-cyan-400" />
+          Explainability & Defense Attribution Breakdown
+        </h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div className="p-3 bg-gray-900 rounded-lg border border-gray-800">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-gray-300 font-semibold">1. Heuristic Rule Engine</span>
+              <span className="text-cyan-400 font-mono">70% Weight</span>
+            </div>
+            <p className="text-gray-400 text-[11px]">
+              {result.redFlags && result.redFlags.length > 0
+                ? `${result.redFlags.length} structural indicator(s) triggered (typosquatting, IP links, urgency language).`
+                : 'Zero heuristic red flags detected. Clean domain and message patterns.'}
+            </p>
+          </div>
+
+          <div className="p-3 bg-gray-900 rounded-lg border border-gray-800">
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-gray-300 font-semibold">2. On-Device DistilBERT NLP</span>
+              <span className="text-purple-400 font-mono">30% Weight</span>
+            </div>
+            <p className="text-gray-400 text-[11px]">
+              Analyzed semantic threat intent via Qualcomm AI Hub transformer model running on-device.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Visual Scam Detection (MobileNet-v2 On-Device) */}
       {result.visual_analysis && (
         <div className="bg-gray-800/80 rounded-lg p-4 border border-gray-700">
