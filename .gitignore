@@ -27,6 +27,7 @@ backend/data/test_indices.json
 
 # Node / Frontend
 node_modules/
+dist-electron/
 .env
 .env.local
 .DS_Store

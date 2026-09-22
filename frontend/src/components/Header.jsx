@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Shield, Cpu, Zap } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { getSystemStatus } from '../api';
 
 export default function Header() {
   const location = useLocation();
@@ -8,8 +8,7 @@ export default function Header() {
 
   useEffect(() => {
     // Fetch NPU/system status for the badge indicator
-    fetch('/api/system/status')
-      .then(res => res.json())
+    getSystemStatus()
       .then(data => setSystemStatus(data))
       .catch(() => setSystemStatus(null));
   }, []);

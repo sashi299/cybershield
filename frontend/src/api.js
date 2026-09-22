@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+const isFile = typeof window !== 'undefined' && window.location.protocol === 'file:';
+
 const api = axios.create({
-  baseURL: '/api'
+  baseURL: isFile ? 'http://127.0.0.1:8000/api' : '/api'
 });
 
 export const analyzeUrl = (url) => api.post('/analyze/url', { url }).then(res => res.data);
