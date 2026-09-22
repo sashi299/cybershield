@@ -24,15 +24,15 @@ export default function Header() {
           <span className="text-xl font-bold text-white tracking-tight">Cyber Shield</span>
           {/* NPU / CPU Status Badge */}
           {systemStatus && (
-            <span className={`ml-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
+            <span className={`ml-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${
               systemStatus.npu_available
                 ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
             }`}>
               {systemStatus.npu_available ? (
-                <><Zap className="w-3 h-3" /> NPU</>
+                <><Zap className="w-3 h-3 text-green-400" /> NPU: Active</>
               ) : (
-                <><Cpu className="w-3 h-3" /> CPU</>
+                <><Cpu className="w-3 h-3 text-blue-400" /> NPU: Not available (CPU fallback)</>
               )}
             </span>
           )}

@@ -141,10 +141,16 @@ def analyze_text_rules(text: str) -> dict:
         add_rule("impersonation", "Uses generic greeting typical of phishing messages.", "medium", 20)
     
     # Threat of consequences
-    threat_keywords = ['will be terminated', 'will be suspended', 'will be closed', 'legal action', 'law enforcement', 'failure to respond']
+    threat_keywords = ['will be terminated', 'will be suspended', 'will be closed', 'legal action', 'law enforcement', 'failure to respond', 'arrest', 'warrant', 'prosecution']
     found_threats = [kw for kw in threat_keywords if kw in text_lower]
     if found_threats:
         add_rule("threat_language", f"Contains threatening language: '{found_threats[0]}'.", "high", 35)
+
+    # Digital arrest / Law enforcement impersonation scam (High-Profile Cyber Crime)
+    digital_arrest_keywords = ['digital arrest', 'arrest warrant', 'cbi officer', 'cbi', 'cyber crime branch', 'money laundering', 'customs department', 'enforcement directorate', 'safe verification account', 'aadhaar']
+    found_digital_arrest = [kw for kw in digital_arrest_keywords if kw in text_lower]
+    if len(found_digital_arrest) >= 2 or 'digital arrest' in text_lower:
+        add_rule("digital_arrest_scam", f"Severe coercive scam: Law enforcement / Digital Arrest intimidation ('{found_digital_arrest[0]}').", "critical", 70)
 
     has_suspicious_url = False
     urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', text)

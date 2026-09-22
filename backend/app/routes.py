@@ -411,7 +411,9 @@ def analyze_qr(file: UploadFile = File(...)):
     # Run on-device MobileNet-v2 visual analysis on the image
     visual_analysis = None
     try:
-        from .vision_classifier import classify_screenshot, is_available as is_vision_available
+        from .vision_classifier import classify_screenshot, load_model as load_vision_model, is_available as is_vision_available
+        if not is_vision_available():
+            load_vision_model()
         if is_vision_available():
             v_res, v_ms = classify_screenshot(contents)
             visual_analysis = {

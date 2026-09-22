@@ -77,27 +77,27 @@ export default function Performance() {
             </div>
           </div>
           <div className="text-xl font-bold text-white mb-1">
-            {systemStatus?.execution_provider || 'Detecting...'}
+            {systemStatus?.npu_available ? 'Snapdragon NPU (QNN)' : 'CPU Execution Provider'}
           </div>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-400">
             {systemStatus?.npu_available 
               ? 'Qualcomm Hexagon Tensor Processor (HTP) Active'
-              : 'CPU Execution Provider (Graceful Fallback Mode)'}
+              : 'NPU: Not available on this device (CPU fallback active)'}
           </p>
         </div>
 
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-lg">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Target Device Platform</span>
+            <span className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Host Platform</span>
             <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-400">
               <HardDrive className="w-4 h-4" />
             </div>
           </div>
           <div className="text-xl font-bold text-white mb-1 truncate" title={systemStatus?.processor}>
-            {systemStatus?.platform ? `${systemStatus.platform} System` : 'Local Host'}
+            {systemStatus?.platform ? `${systemStatus.platform} Architecture` : 'Local Host'}
           </div>
-          <p className="text-xs text-gray-500 truncate" title={systemStatus?.processor}>
-            {systemStatus?.processor || 'Snapdragon X Series / Windows ARM64 Ready'}
+          <p className="text-xs text-gray-400 truncate" title={systemStatus?.processor}>
+            {systemStatus?.processor || 'Windows Host (Target: Snapdragon X ARM64)'}
           </p>
         </div>
 
@@ -111,8 +111,22 @@ export default function Performance() {
           <div className="text-xl font-bold text-white mb-1">
             3 / 3 Models Ready
           </div>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-400">
             DistilBERT INT8 + MobileNet-v2 + Legacy Heuristic ML
+          </p>
+        </div>
+      </div>
+
+      {/* Hardware Benchmark Methodology Notice */}
+      <div className="bg-blue-950/30 border border-blue-800/50 rounded-xl p-4 flex items-start gap-3 text-xs text-blue-200">
+        <div className="p-1 bg-blue-500/20 rounded text-blue-400 shrink-0 mt-0.5">
+          <Zap className="w-4 h-4" />
+        </div>
+        <div className="space-y-1">
+          <span className="font-bold text-white block">Benchmark Methodology & Hardware Notice</span>
+          <p className="text-blue-300 leading-relaxed">
+            <strong>CPU numbers</strong> below are measured live in real-time on this host device using ONNX Runtime (<code className="bg-blue-900/50 px-1 py-0.5 rounded text-white font-mono">CPUExecutionProvider</code>) across 50 iterations.
+            <strong>NPU numbers</strong> are <em>projected latencies based on Qualcomm AI Hub published device profiling benchmarks on Snapdragon X Elite hardware</em> using <code className="bg-blue-900/50 px-1 py-0.5 rounded text-white font-mono">QNNExecutionProvider</code> (Qualcomm Hexagon HTP). On Snapdragon-powered HP PCs, execution is automatically hardware-accelerated on the NPU.
           </p>
         </div>
       </div>
@@ -131,13 +145,13 @@ export default function Performance() {
                 <p className="text-xs text-gray-400">Qualcomm AI Hub • INT8 Quantized (64.3 MB)</p>
               </div>
               <span className="px-2.5 py-1 bg-cyan-500/10 text-cyan-400 rounded-md text-xs font-mono font-medium">
-                50 Runs
+                Live 50 Runs
               </span>
             </div>
 
             <div className="grid grid-cols-3 gap-3">
               <div className="bg-gray-950 p-3 rounded-lg border border-gray-800">
-                <span className="text-gray-500 text-xs">Average</span>
+                <span className="text-gray-500 text-xs">Measured Avg (CPU)</span>
                 <div className="text-xl font-bold text-cyan-400 font-mono">
                   {benchmarkData.text_classifier?.avg_ms} ms
                 </div>
@@ -159,16 +173,16 @@ export default function Performance() {
             {/* Hardware Speedup Bar */}
             <div className="p-4 bg-gray-950 rounded-lg border border-gray-800 space-y-2">
               <div className="flex justify-between text-xs">
-                <span className="text-gray-400">Snapdragon NPU Estimated Latency</span>
-                <span className="text-green-400 font-bold font-mono">~3.1 ms (9.2x Speedup)</span>
+                <span className="text-gray-400">Qualcomm AI Hub Projected NPU Latency</span>
+                <span className="text-green-400 font-bold font-mono">~3.1 ms (~9x Speedup)</span>
               </div>
               <div className="w-full bg-gray-800 rounded-full h-2 overflow-hidden flex">
                 <div className="bg-green-500 h-2 rounded-full" style={{ width: '11%' }}></div>
                 <div className="bg-cyan-500/30 h-2 rounded-full" style={{ width: '89%' }}></div>
               </div>
               <div className="flex justify-between text-[11px] text-gray-500">
-                <span>NPU: 3.1ms</span>
-                <span>CPU measured: {benchmarkData.text_classifier?.avg_ms}ms</span>
+                <span>Projected Snapdragon NPU: 3.1ms</span>
+                <span>Measured Host CPU: {benchmarkData.text_classifier?.avg_ms}ms</span>
               </div>
             </div>
           </div>
@@ -184,13 +198,13 @@ export default function Performance() {
                 <p className="text-xs text-gray-400">Qualcomm AI Hub • W8A16 Quantized (4.4 MB)</p>
               </div>
               <span className="px-2.5 py-1 bg-purple-500/10 text-purple-400 rounded-md text-xs font-mono font-medium">
-                50 Runs
+                Live 50 Runs
               </span>
             </div>
 
             <div className="grid grid-cols-3 gap-3">
               <div className="bg-gray-950 p-3 rounded-lg border border-gray-800">
-                <span className="text-gray-500 text-xs">Average</span>
+                <span className="text-gray-500 text-xs">Measured Avg (CPU)</span>
                 <div className="text-xl font-bold text-purple-400 font-mono">
                   {benchmarkData.vision_classifier?.avg_ms} ms
                 </div>
@@ -212,16 +226,16 @@ export default function Performance() {
             {/* Hardware Speedup Bar */}
             <div className="p-4 bg-gray-950 rounded-lg border border-gray-800 space-y-2">
               <div className="flex justify-between text-xs">
-                <span className="text-gray-400">Snapdragon NPU Estimated Latency</span>
-                <span className="text-green-400 font-bold font-mono">~0.4 ms (9.1x Speedup)</span>
+                <span className="text-gray-400">Qualcomm AI Hub Projected NPU Latency</span>
+                <span className="text-green-400 font-bold font-mono">~0.4 ms (~9x Speedup)</span>
               </div>
               <div className="w-full bg-gray-800 rounded-full h-2 overflow-hidden flex">
                 <div className="bg-green-500 h-2 rounded-full" style={{ width: '11%' }}></div>
                 <div className="bg-purple-500/30 h-2 rounded-full" style={{ width: '89%' }}></div>
               </div>
               <div className="flex justify-between text-[11px] text-gray-500">
-                <span>NPU: 0.4ms</span>
-                <span>CPU measured: {benchmarkData.vision_classifier?.avg_ms}ms</span>
+                <span>Projected Snapdragon NPU: 0.4ms</span>
+                <span>Measured Host CPU: {benchmarkData.vision_classifier?.avg_ms}ms</span>
               </div>
             </div>
           </div>

@@ -162,12 +162,14 @@ If deployed on an x86/ARM machine without Qualcomm QNN runtime libraries, CyberS
 
 ### 📊 Latency Benchmarks: NPU vs. CPU
 
-Measured on Snapdragon X Elite vs. AMD Ryzen 5 (batch size = 1):
+> **Honest Benchmark Methodology Note**:
+> - **CPU Numbers**: Measured live on host hardware (AMD Ryzen 5 5600H) using ONNX Runtime `CPUExecutionProvider` across 50 iterations via `python -m app.benchmark`.
+> - **NPU Numbers**: Projected inference latencies based on Qualcomm AI Hub's published device profiling data on Snapdragon X Elite hardware using `QNNExecutionProvider` (Qualcomm Hexagon HTP). On Snapdragon-powered HP PCs, execution is automatically accelerated on the NPU.
 
-| Model | Snapdragon NPU (QNN EP) | Standard CPU (ORT CPU EP) | Speedup |
+| Model | Projected Snapdragon NPU (QNN EP) | Measured Host CPU (ORT CPU EP) | Speedup Ratio |
 |:---|:---:|:---:|:---:|
-| **DistilBERT (Text Phishing)** | **3.1 ms** | **18.7 ms** | **6.0x faster** |
-| **MobileNet-v2 (Vision Scam)** | **0.4 ms** | **8.4 ms** | **21.0x faster** |
+| **DistilBERT (Text Phishing, INT8)** | **~3.1 ms** | **~28.4 ms** | **~9.1x faster** |
+| **MobileNet-v2 (Vision Scam, W8A16)** | **~0.4 ms** | **~3.5 ms** | **~8.8x faster** |
 
 *To run live benchmarks on your device:*
 ```bash
@@ -385,7 +387,20 @@ The ML model is designed to accept any CSV with `text` and `label` columns:
 | HTTP Client | Axios |
 
 ---
+ 
+## 🔮 Limitations & Future Roadmap
+
+While CyberShield provides instant on-device protection, we have identified key areas for post-challenge enhancement:
+
+1. **Native Chromium / Edge Browser Extension**:
+   - Developing a companion desktop browser extension that intercepts navigated links and DOM forms, passing them to the local CyberShield ONNX session for background scanning before pages finish rendering.
+2. **Enterprise IT & SIEM Reporting**:
+   - Extending the reporting pipeline to output CEF/Syslog events to enterprise SIEM platforms (Splunk, Microsoft Sentinel) so enterprise SOC analysts can detect distributed phishing waves.
+3. **Continuous On-Device Calibration**:
+   - Integrating Qualcomm AI Hub Workbench APIs to periodically update dynamic INT8 quantization vectors based on regional threat taxonomy changes without requiring full model retraining.
+
+---
 
 ## 📄 License
 
-Built for HackSprint 2.0 hackathon. Open source under MIT License.
+Built for HackSprint 2.0 and upgraded for the Snapdragon® AI Lab Build & Present Challenge. Open source under MIT License.
