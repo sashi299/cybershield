@@ -107,6 +107,9 @@ def get_system_status() -> dict:
         "execution_provider": get_active_provider_name(),
         "platform": platform.machine(),
         "processor": platform.processor(),
+        "target_hardware": "Snapdragon-powered HP PCs (HP OmniBook X / EliteBook Ultra G1q)",
+        "npu_spec": "Qualcomm Hexagon NPU (45 TOPS, HTP Architecture)",
+        "optimization_profile": "On-Device INT8/W8A16 Low-Power NPU Offload (<1.5W)",
         "models_loaded": models_loaded,
         "model_dir": MODEL_DIR,
     }

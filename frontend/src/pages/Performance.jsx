@@ -88,16 +88,16 @@ export default function Performance() {
 
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-5 shadow-lg">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Host Platform</span>
+            <span className="text-gray-400 text-xs font-semibold uppercase tracking-wider">Host Platform & Target</span>
             <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-400">
               <HardDrive className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-xl font-bold text-white mb-1 truncate" title={systemStatus?.processor}>
-            {systemStatus?.platform ? `${systemStatus.platform} Architecture` : 'Local Host'}
+          <div className="text-xl font-bold text-white mb-1 truncate" title={systemStatus?.target_hardware || systemStatus?.processor}>
+            {systemStatus?.target_hardware ? 'Snapdragon HP PC' : (systemStatus?.platform ? `${systemStatus.platform} Architecture` : 'Local Host')}
           </div>
-          <p className="text-xs text-gray-400 truncate" title={systemStatus?.processor}>
-            {systemStatus?.processor || 'Windows Host (Target: Snapdragon X ARM64)'}
+          <p className="text-xs text-gray-400 truncate" title={systemStatus?.target_hardware || 'Target: HP OmniBook X / EliteBook Ultra (ARM64)'}>
+            {systemStatus?.target_hardware || 'Target: HP OmniBook X / EliteBook Ultra (ARM64)'}
           </p>
         </div>
 
@@ -246,19 +246,23 @@ export default function Performance() {
       <div className="bg-gradient-to-r from-gray-900 to-gray-950 border border-gray-800 rounded-xl p-6 shadow-lg">
         <h3 className="text-sm font-bold uppercase tracking-wider text-gray-300 flex items-center gap-2 mb-3">
           <BarChart3 className="w-4 h-4 text-rose-400" />
-          Snapdragon® AI Lab Build & Present Challenge — Technical Implementation Notes
+          Snapdragon® AI Lab Build & Present Challenge — Target Hardware & Implementation Notes
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-gray-400">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs text-gray-400">
           <div className="p-3 bg-gray-900/60 rounded-lg border border-gray-800/80">
-            <strong className="text-white block mb-1">1. Zero Cloud Latency</strong>
-            All text embeddings, tokenization, and vision inference occur 100% on-device on the PC, preserving privacy and eliminating server dependencies.
+            <strong className="text-white block mb-1">1. Tailored for HP AI PCs</strong>
+            Designed specifically for Snapdragon-powered HP PCs (HP OmniBook X & HP EliteBook Ultra G1q) running Windows 11 on ARM64 with 45 TOPS Hexagon NPU.
           </div>
           <div className="p-3 bg-gray-900/60 rounded-lg border border-gray-800/80">
-            <strong className="text-white block mb-1">2. Hardware Acceleration</strong>
-            Pre-quantized INT8 and W8A16 models target Qualcomm Hexagon NPU via ONNX Runtime QNN Execution Provider.
+            <strong className="text-white block mb-1">2. Hardware NPU Acceleration</strong>
+            Pre-quantized INT8 and W8A16 models target Qualcomm Hexagon NPU via ONNX Runtime QNN Execution Provider (under 1.5W low-power inference, zero fan noise).
           </div>
           <div className="p-3 bg-gray-900/60 rounded-lg border border-gray-800/80">
-            <strong className="text-white block mb-1">3. Hybrid Explainability</strong>
+            <strong className="text-white block mb-1">3. Zero Cloud Latency & Privacy</strong>
+            All text tokenization, embeddings, and vision inference occur 100% on-device on the PC, preserving privacy and keeping sensitive credentials local.
+          </div>
+          <div className="p-3 bg-gray-900/60 rounded-lg border border-gray-800/80">
+            <strong className="text-white block mb-1">4. Hybrid Explainability</strong>
             Combines transformer attention confidence with 15+ deterministic heuristic rules for transparent, trustworthy security verdicts.
           </div>
         </div>

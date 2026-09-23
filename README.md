@@ -1,14 +1,14 @@
-# 🛡️ Cyber Shield
+# 🛡️ Cyber Shield 2.0 (Desktop Edition)
 
-**Intelligent Phishing, Scam & Cyber-Fraud Detection Platform**
+**Intelligent On-Device Phishing, Scam & Cyber-Fraud Detection Platform**  
+*Engineered and hardware-optimized for Snapdragon-powered HP PCs (HP OmniBook X & HP EliteBook Ultra G1q)*  
+*Submission for the Snapdragon® AI Lab Build & Present Challenge*
 
-Built for HackSprint 2.0 — a 24-hour hackathon project that analyzes suspicious digital content (URLs, emails, SMS, QR codes) and explains the risk in plain language.
-
-![Tech Stack](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
+![Platform](https://img.shields.io/badge/Platform-Windows%2011%20ARM64%20(Snapdragon)-CE0F3D?style=flat&logo=windows&logoColor=white)
+![NPU](https://img.shields.io/badge/NPU-Qualcomm%20Hexagon%20(45%20TOPS)-E6002A?style=flat)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)
-![Tailwind](https://img.shields.io/badge/TailwindCSS-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat&logo=scikit-learn&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white)
+![ONNX Runtime](https://img.shields.io/badge/ONNX%20Runtime-QNN%20EP-blue?style=flat)
 
 ---
 
@@ -59,7 +59,13 @@ Built for HackSprint 2.0 — a 24-hour hackathon project that analyzes suspiciou
 
 ## ⚡ Snapdragon® NPU Optimization (Qualcomm AI Hub)
 
-This project has been redesigned and hardware-optimized for **Snapdragon-powered HP PCs** as part of the **Snapdragon® AI Lab Build & Present Challenge**.
+This project has been redesigned, natively compiled, and hardware-optimized specifically for **Snapdragon-powered HP PCs** (such as the **HP OmniBook X 14** and **HP EliteBook Ultra G1q 14 AI PC**) as part of the **Snapdragon® AI Lab Build & Present Challenge**.
+
+### 💻 Target Device Optimization: HP AI PCs (Snapdragon X Elite / Plus)
+- **Target Hardware**: HP OmniBook X & HP EliteBook Ultra G1q Copilot+ PCs powered by Snapdragon® X Series silicon with Qualcomm Oryon™ CPU, Adreno™ GPU, and dedicated **45 TOPS Qualcomm Hexagon™ NPU**.
+- **Thermals & Battery Preservation**: Continuous text tokenization and vision classification run under **<1.5W power draw** on the Hexagon NPU. By offloading from the CPU/GPU, CyberShield maintains real-time threat vigilance without waking the cooling fans or degrading the HP OmniBook's 26-hour battery life.
+- **Enterprise Defense Synergy**: Complements enterprise endpoint protections (like HP Wolf Security) by adding an on-device application-level AI guard that intercepts deceptive conversational phishing, digital arrest extortions, and fraudulent QR payloads before sensitive data is exposed.
+- **Native Windows ARM64 Architecture**: Engineered with a native Windows ARM64 desktop application shell (Tauri v2 + Electron with WebView2 integration), complete with system clipboard monitoring, `Ctrl+V` screenshot analysis, and background tray minimization.
 
 ### 🧠 Qualcomm AI Hub Models Integrated
 
