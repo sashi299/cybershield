@@ -14,27 +14,27 @@
     },
     "model_dir": "C:\\Users\\hp\\Documents\\cybershield\\cybershield\\backend\\models"
   },
-  "timestamp": "2026-09-23 08:52:02",
+  "timestamp": "2026-09-23 09:01:20",
   "text_classifier": {
     "status": "completed",
     "model": "DistilBERT (ONNX)",
     "provider": "CPUExecutionProvider",
     "n_runs": 50,
-    "avg_ms": 27.06,
-    "min_ms": 23.14,
-    "max_ms": 29.47,
-    "p50_ms": 27.6,
-    "p95_ms": 28.92
+    "avg_ms": 27.59,
+    "min_ms": 25.49,
+    "max_ms": 29.31,
+    "p50_ms": 27.48,
+    "p95_ms": 28.96
   },
   "vision_classifier": {
     "status": "completed",
     "model": "MobileNet-v2 (ONNX)",
     "provider": "CPUExecutionProvider",
     "n_runs": 50,
-    "avg_ms": 3.48,
-    "min_ms": 2.55,
-    "max_ms": 4.26,
-    "p50_ms": 3.43,
-    "p95_ms": 4.01
+    "avg_ms": 3.85,
+    "min_ms": 2.5,
+    "max_ms": 10.73,
+    "p50_ms": 3.57,
+    "p95_ms": 5.58
   }
 }

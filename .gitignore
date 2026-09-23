@@ -24,6 +24,7 @@ data/test_set.csv
 data/test_indices.json
 backend/data/test_set.csv
 backend/data/test_indices.json
+backend/data/roboflow_dataset/
 
 # Node / Frontend
 node_modules/
