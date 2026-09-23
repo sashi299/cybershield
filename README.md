@@ -1,8 +1,7 @@
 # 🛡️ Cyber Shield 2.0 (Desktop Edition)
 
-**Intelligent On-Device Phishing, Scam & Cyber-Fraud Detection Platform**  
-*Engineered and hardware-optimized for Snapdragon-powered HP PCs (HP OmniBook X & HP EliteBook Ultra G1q)*  
-*Submission for the Snapdragon® AI Lab Build & Present Challenge*
+**Intelligent On-Device Threat & Fraud Detection Platform**  
+*Optimized for Snapdragon-Powered HP PCs (HP OmniBook X & HP EliteBook Ultra G1q)*
 
 ![Platform](https://img.shields.io/badge/Platform-Windows%2011%20ARM64%20(Snapdragon)-CE0F3D?style=flat&logo=windows&logoColor=white)
 ![NPU](https://img.shields.io/badge/NPU-Qualcomm%20Hexagon%20(45%20TOPS)-E6002A?style=flat)
@@ -12,10 +11,14 @@
 
 ---
 
-> 🏆 **Snapdragon® AI Lab Build & Present Challenge (Qualcomm & HP)**  
-> **Candidate Track**: Individual Participant • Competing for Qualcomm & HP Pre-Placement Interviews (PPI)  
-> 📖 **[Presentation Pitch Deck & Scripts (3-min & 5-min)](PRESENTATION_PITCH_DECK.md)** | 📋 **[Official Submission Proposal](SUBMISSION_PROPOSAL.md)**  
-> 🎥 **[Interactive Presentation Showroom](demo_media/presentation_showroom.html)** | 🎬 **[1080p Challenge Demo Video](demo_media/CyberShield_Snapdragon_Challenge_Demo_1080p.webm)**
+CyberShield 2.0 is an on-device cybersecurity desktop application engineered to intercept modern phishing, digital arrest scams, credential harvesting, and malicious QR codes (quishing) in real-time. Designed specifically for Windows on Snapdragon (ARM64), it executes lightweight quantized transformer and computer vision models directly on the **Qualcomm Hexagon™ NPU**, delivering sub-3ms evaluation with zero cloud telemetry and all-day battery efficiency (<1.5W).
+
+📚 **Technical Documentation**:
+- [Architecture & Detection Pipeline](docs/ARCHITECTURE.md)
+- [Backend API Reference](docs/API_REFERENCE.md)
+- [Frontend UI & Desktop Shell](docs/FRONTEND.md)
+- [1080p Demonstration Video](demo_media/CyberShield_Snapdragon_Challenge_Demo_1080p.webm)
+- [Interactive Media Showroom](demo_media/presentation_showroom.html)
 
 ---
 

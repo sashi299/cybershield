@@ -72,12 +72,6 @@
       border-color: var(--hp-cyan);
       color: #38bdf8;
     }
-    .badge.ppi {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(225, 20, 36, 0.18));
-      border: 1px solid #f59e0b;
-      color: #fbbf24;
-      box-shadow: 0 0 14px rgba(245, 158, 11, 0.25);
-    }
     .badge-dot {
       width: 8px;
       height: 8px;
@@ -388,19 +382,19 @@
 <body>
   <div class="container">
     
-    <!-- Top Recognition & Track Badges -->
-    <div class="badge-bar">
-      <div class="badge qualcomm">
+    <!-- Top Badges -->
+    <div class="badge-container">
+      <div class="badge">
         <div class="badge-dot"></div>
-        Qualcomm® Snapdragon® AI Lab Challenge 2026
+        Qualcomm® Snapdragon® AI Lab
       </div>
       <div class="badge hp">
         <div class="badge-dot"></div>
-        HP AI PC Optimization Track
+        HP AI PC Hardware-Accelerated
       </div>
-      <div class="badge ppi">
+      <div class="badge">
         <div class="badge-dot"></div>
-        Candidate for Qualcomm Pre-Placement Interview (PPI)
+        Qualcomm Hexagon™ NPU (45 TOPS)
       </div>
     </div>
 
@@ -410,10 +404,6 @@
       <p class="subtitle">
         Intelligent, on-device cyber-defense and extortion detection engine engineered for Snapdragon-powered HP PCs. Sub-3ms response times with zero cloud latency and complete data privacy.
       </p>
-      <div class="candidate-callout">
-        👨‍💻 <strong>Individual Participant</strong> • Solo Full-Stack & Edge-AI Engineer • 
-        <a href="https://github.com/sashi299/cybershield" target="_blank" style="color: #38bdf8; text-decoration: none; font-weight: 600;">GitHub Repository ↗</a>
-      </div>
     </header>
 
     <!-- Video Showcase Card -->
@@ -553,14 +543,11 @@
 
     <!-- Navigation Action Buttons -->
     <div class="action-bar">
-      <a href="../PRESENTATION_PITCH_DECK.md" class="btn btn-primary" target="_blank">
-        📖 Read Pitch Deck & Presentation Scripts
+      <a href="../README.md" class="btn btn-primary" target="_blank">
+        📖 Product Overview & Setup Guide
       </a>
-      <a href="../SUBMISSION_PROPOSAL.md" class="btn btn-secondary" target="_blank">
-        📋 View Submission Proposal Dossier
-      </a>
-      <a href="../README.md" class="btn btn-secondary" target="_blank">
-        🛠️ Technical Architecture & Setup Guide
+      <a href="../docs/ARCHITECTURE.md" class="btn btn-secondary" target="_blank">
+        🏛️ System & NPU Technical Specs
       </a>
       <a href="https://github.com/sashi299/cybershield" class="btn btn-secondary" target="_blank">
         🌐 GitHub Source Repository
@@ -569,8 +556,8 @@
 
     <!-- Footer -->
     <footer>
-      <strong>Cyber Shield 2.0 (Desktop Edition)</strong> • Qualcomm® Snapdragon® AI Lab Build & Present Challenge 2026<br>
-      Candidate for Qualcomm & HP Pre-Placement Interviews (PPI) • Solo Engineering Excellence
+      <strong>Cyber Shield 2.0 (Desktop Edition)</strong> • On-Device Threat Defense for Snapdragon-Powered HP PCs<br>
+      Hardware-Accelerated via Qualcomm Hexagon™ NPU (45 TOPS) on Windows 11 ARM64
     </footer>
   </div>
 
