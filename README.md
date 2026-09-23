@@ -1,4 +1,4 @@
-# 🛡️ Cyber Shield 2.0 (Desktop Edition)
+# 🛡️ Cyber Shield 2.0 (Desktop Edition)
 
 **Intelligent On-Device Phishing, Scam & Cyber-Fraud Detection Platform**  
 *Engineered and hardware-optimized for Snapdragon-powered HP PCs (HP OmniBook X & HP EliteBook Ultra G1q)*  
@@ -12,18 +12,24 @@
 
 ---
 
+> 🏆 **Snapdragon® AI Lab Build & Present Challenge (Qualcomm & HP)**  
+> **Candidate Track**: Individual Participant • Competing for Qualcomm & HP Pre-Placement Interviews (PPI)  
+> 📖 **[Presentation Pitch Deck & Scripts (3-min & 5-min)](PRESENTATION_PITCH_DECK.md)** | 📋 **[Official Submission Proposal](SUBMISSION_PROPOSAL.md)**  
+> 🎥 **[Interactive Presentation Showroom](demo_media/presentation_showroom.html)** | 🎬 **[1080p Challenge Demo Video](demo_media/CyberShield_Snapdragon_Challenge_Demo_1080p.webm)**
+
+---
+
 ## ✨ Features
 
 - **Multi-input analysis** — Scan URLs, email text, SMS messages, and QR code images
 - **Rule-based heuristic engine** — Detects IP-based URLs, typosquatting, URL shorteners, suspicious TLDs, urgency keywords, and more
-- **ML classifier** — Logistic Regression trained on TF-IDF character n-grams for phishing detection
-- **QR code decoding** — Upload a QR image, automatically decode and analyze the embedded URL
+- **Dual Qualcomm AI Hub neural models** — DistilBERT INT8 for semantic scam/extortion analysis + MobileNet-v2 W8A16 for visual fraud detection
+- **QR code decoding & Quishing detection** — Upload or paste QR images, decode matrices, and evaluate destination pages
 - **Combined verdict** — Merges rule engine score + ML probability into Safe / Suspicious / Dangerous
-- **Plain-language explanations** — Every flagged item is explained in non-technical terms
-- **Safe browsing recommendations** — Tailored advice based on threat type
-- **Educational tips** — 2-3 awareness tips relevant to the detected threat category
-- **Report threats** — Log submissions + verdicts to a local database
+- **Plain-language explanations** — Every flagged item is explained in non-technical terms with actionable tips
+- **Safe browsing recommendations** — Tailored advice based on threat category
 - **Scan history dashboard** — View past scans with risk levels and details
+- **Hardware benchmark dashboard** — Live NPU vs CPU profiling and speedup measurements
 
 ---
 

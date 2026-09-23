@@ -180,6 +180,7 @@ The challenge evaluates proposals on four criteria, where ties are resolved by c
   * `header_badge_preview.png` — Crisp Snapdragon® X & Hexagon Silicon Badge
 
 #### 4. Comprehensive Engineering Documentation
+* `PRESENTATION_PITCH_DECK.md`: Elite 3-min elevator pitch, 5-min slide-by-slide judge script, Telugu & English summaries, and evaluation matrix.
 * `README.md`: Thorough setup guide, hardware specifications, architecture diagrams, and benchmark methodology.
 * `DOCUMENTATION.md`: Complete architectural breakdown and API documentation.
 * `FRONTEND_DOCS.md` & `BACKEND_DOCS.md`: Granular component and route references.
